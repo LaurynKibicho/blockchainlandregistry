@@ -4,6 +4,7 @@ import 'package:land_registration/providers/LandRegisterModel.dart';
 import 'package:land_registration/widget/menu_item_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:flutter/services.dart';
 
 import '../constant/utils.dart';
 import '../providers/MetamaskProvider.dart';
@@ -16,6 +17,38 @@ class AddLandInspector extends StatefulWidget {
 }
 
 class _AddLandInspectorState extends State<AddLandInspector> {
+  Widget customTextField(
+    String label,
+    String hint,
+    Function(String) onChanged, {
+    bool isNumber = false,
+    String? Function(String?)? validator,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        validator: validator ??
+            (val) => val == null || val.isEmpty ? 'Required' : null,
+        onChanged: onChanged,
+        keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+        inputFormatters:
+            isNumber ? [FilteringTextInputFormatter.digitsOnly] : [],
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.grey.shade100,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          labelText: label,
+          hintText: hint,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+        ),
+      ),
+    );
+  }
+
   late String address, name, age, desig, city, newaddress;
   var model, model2;
   double width = 490;
@@ -41,7 +74,7 @@ class _AddLandInspectorState extends State<AddLandInspector> {
       key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: const Color(0xFF272D34),
+        backgroundColor: Colors.blueAccent,
         leading: isDesktop
             ? Container()
             : GestureDetector(
@@ -64,18 +97,19 @@ class _AddLandInspectorState extends State<AddLandInspector> {
       drawerScrimColor: Colors.transparent,
       body: Row(
         children: [
-          isDesktop ? drawer2() : Container(),
-          if (screen == 0)
-            addLandInspector()
-          else if (screen == 1)
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(25),
-                child: landInspectorList(),
-              ),
-            )
-          else if (screen == 2)
-            changeContractOwner()
+          if (isDesktop) drawer2(),
+          Expanded(
+            child: Center(
+              child: screen == 0
+                  ? addLandInspector()
+                  : screen == 1
+                      ? Container(
+                          padding: const EdgeInsets.all(25),
+                          child: landInspectorList(),
+                        )
+                      : changeContractOwner(),
+            ),
+          )
         ],
       ),
     );
@@ -107,308 +141,318 @@ class _AddLandInspectorState extends State<AddLandInspector> {
     print(info);
   }
 
-  Widget landInspectorList() {
-    if (isLoading) return const Center(child: CircularProgressIndicator());
-    return ListView.builder(
-      itemCount:
-          allLandInspectorInfo == null ? 1 : allLandInspectorInfo.length + 1,
-      itemBuilder: (BuildContext context, int index) {
-        if (index == 0) {
-          return Column(
-            children: [
-              const Divider(
-                height: 15,
+ Widget landInspectorList() {
+  if (isLoading) return const Center(child: CircularProgressIndicator());
+
+  return ListView.builder(
+    itemCount: allLandInspectorInfo == null ? 1 : allLandInspectorInfo.length + 1,
+    padding: const EdgeInsets.all(16),
+    itemBuilder: (BuildContext context, int index) {
+      if (index == 0) {
+        return Column(
+          children: [
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(8),
               ),
-              Row(
+              child: Row(
                 children: const [
                   Expanded(
-                    child: Text(
-                      '#',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
                     flex: 1,
+                    child: Text('#', style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                   Expanded(
-                      child: Center(
-                        child: Text('LandInspector\'s Address',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
-                      flex: 5),
+                    flex: 5,
+                    child: Text('Land Inspector Address',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
                   Expanded(
-                    child: Center(
-                      child: Text('Name',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
                     flex: 3,
+                    child: Text('Name',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                   Expanded(
-                    child: Center(
-                      child: Text('City',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
                     flex: 2,
+                    child: Text('City',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                   Expanded(
-                    child: Center(
-                      child: Text('Remove',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
                     flex: 2,
-                  )
+                    child: Text('Action',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
                 ],
               ),
-              const Divider(
-                height: 15,
-              )
-            ],
-          );
-        }
-        index -= 1;
-        List<dynamic> data = allLandInspectorInfo[index];
-        return ListTile(
-          title: Row(
+            ),
+            const SizedBox(height: 12),
+          ],
+        );
+      }
+
+      index -= 1;
+      List<dynamic> data = allLandInspectorInfo[index];
+
+      return Card(
+        elevation: 4,
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+          child: Row(
             children: [
               Expanded(
-                child: Text((index + 1).toString()),
                 flex: 1,
+                child: Text((index + 1).toString()),
               ),
               Expanded(
-                  child: Center(
-                    child: Text(data[1].toString()),
-                  ),
-                  flex: 5),
-              Expanded(
-                  child: Center(
-                    child: Text(data[2].toString()),
-                  ),
-                  flex: 3),
-              Expanded(
-                  child: Center(
-                    child: Text(data[5].toString()),
-                  ),
-                  flex: 2),
-              Expanded(
-                  child: Center(
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: Colors.red),
-                        onPressed: () async {
-                          confirmDialog('Are you sure to remove?', context,
-                              () async {
-                            SmartDialog.showLoading();
-                            if (connectedWithMetamask)
-                              await model2.removeLandInspector(data[1]);
-                            else
-                              await model.removeLandInspector(data[1]);
-                            Navigator.pop(context);
-                            await getLandInspectorInfo();
-                            SmartDialog.dismiss();
-                          });
-                        },
-                        child: const Text('Remove')),
-                  ),
-                  flex: 2),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget changeContractOwner() {
-    return Center(
-      widthFactor: isDesktop ? 2 : 1,
-      child: Container(
-        width: width,
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            children: <Widget>[
-              const Text(
-                "Change Contract Owner",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                flex: 5,
+                child: Text(
+                  data[1].toString(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontWeight: FontWeight.w500),
+                ),
               ),
-              SizedBox(
-                height: 10,
+              Expanded(
+                flex: 3,
+                child: Text(
+                  data[2].toString(),
+                  textAlign: TextAlign.center,
+                ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  onChanged: (val) {
-                    newaddress = val;
-                  },
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Address',
-                    hintText: 'Enter new Contract Owner Address',
+              Expanded(
+                flex: 2,
+                child: Text(
+                  data[5].toString(),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Center(
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    icon: const Icon(Icons.delete),
+                    label: const Text('Remove'),
+                    onPressed: () async {
+                      confirmDialog('Are you sure to remove?', context, () async {
+                        SmartDialog.showLoading();
+                        if (connectedWithMetamask) {
+                          await model2.removeLandInspector(data[1]);
+                        } else {
+                          await model.removeLandInspector(data[1]);
+                        }
+                        Navigator.pop(context);
+                        await getLandInspectorInfo();
+                        SmartDialog.dismiss();
+                      });
+                    },
                   ),
                 ),
               ),
-              CustomButton(
-                  'Change',
-                  isLoading
-                      ? null
-                      : () async {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          try {
-                            if (connectedWithMetamask)
-                              await model2.changeContractOwner(newaddress);
-                            else
-                              await model.changeContractOwner(newaddress);
-                            showToast("Successfully Changed",
-                                context: context,
-                                backgroundColor: Colors.green);
-                          } catch (e) {
-                            print(e);
-                            showToast("Something Went Wrong",
-                                context: context, backgroundColor: Colors.red);
-                          }
-                          setState(() {
-                            isLoading = false;
-                          });
-                        }),
-              isLoading ? const CircularProgressIndicator() : Container()
             ],
           ),
         ),
+      );
+    },
+  );
+}
+
+
+  Widget changeContractOwner() {
+  return Center(
+    child: Container(
+      constraints: BoxConstraints(
+        maxWidth: isDesktop ? 600 : double.infinity,
       ),
-    );
-  }
+      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            spreadRadius: 2,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text(
+            "Change Contract Owner",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            decoration: InputDecoration(
+              labelText: 'New Owner Address',
+              hintText: 'Enter new contract owner address',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              filled: true,
+              fillColor: Colors.grey[100],
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter an address';
+              }
+              return null;
+            },
+            onChanged: (val) {
+              newaddress = val;
+            },
+          ),
+          const SizedBox(height: 25),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: isLoading
+                  ? null
+                  : () async {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      try {
+                        if (connectedWithMetamask) {
+                          await model2.changeContractOwner(newaddress);
+                        } else {
+                          await model.changeContractOwner(newaddress);
+                        }
+                        showToast("Successfully Changed",
+                            context: context, backgroundColor: Colors.green);
+                      } catch (e) {
+                        print(e);
+                        showToast("Something Went Wrong",
+                            context: context, backgroundColor: Colors.red);
+                      }
+                      setState(() {
+                        isLoading = false;
+                      });
+                    },
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                backgroundColor: Colors.indigo,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: isLoading
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Text(
+                      'Change',
+                      style: TextStyle(fontSize: 16),
+                    ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 
   Widget addLandInspector() {
     return Center(
-      widthFactor: isDesktop ? 2 : 1,
-      child: Container(
-        width: width,
-        child: Padding(
-          padding: const EdgeInsets.all(15),
+      child: SingleChildScrollView(
+        child: Container(
+          width: width,
+          constraints: const BoxConstraints(maxWidth: 600),
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              )
+            ],
+          ),
           child: Form(
             key: _formKey,
             child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                    onChanged: (val) {
-                      address = val;
-                    },
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Address',
-                      hintText:
-                          'Enter Land Inspector Address(0xc5aEabE793B923981fc401bb8da620FDAa45ea2B)',
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Center(
+                  child: Text(
+                    'Add Land Inspector',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blueAccent,
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                    onChanged: (val) {
-                      name = val;
-                    },
-                    //obscureText: true,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Name',
-                      hintText: 'Enter Name',
-                    ),
+                const SizedBox(height: 8),
+                const Center(
+                  child: Text(
+                    'Fill the form to register a land inspector',
+                    style: TextStyle(fontSize: 16, color: Colors.black54),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                    onChanged: (val) {
-                      age = val;
-                    },
-                    //obscureText: true,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Age',
-                      hintText: 'Enter Age',
+                const SizedBox(height: 16),
+                customTextField(
+                    'Address', 'Enter Wallet Address', (val) => address = val),
+                customTextField('Name', 'Enter Name', (val) => name = val),
+                customTextField('Age', 'Enter Age', (val) => age = val,
+                    isNumber: true),
+                customTextField(
+                    'Designation', 'Enter Designation', (val) => desig = val),
+                customTextField('City', 'Enter City', (val) => city = val),
+                const SizedBox(height: 20),
+                Center(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 14),
+                      backgroundColor: Colors.blueAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                    onChanged: (val) {
-                      desig = val;
-                    },
-                    //obscureText: true,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Designation',
-                      hintText: 'Enter Designation',
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                    onChanged: (val) {
-                      city = val;
-                    },
-                    //obscureText: true,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'City',
-                      hintText: 'Enter City',
-                    ),
-                  ),
-                ),
-                CustomButton(
-                    'Add',
-                    isLoading
+                    onPressed: isLoading
                         ? null
                         : () async {
                             if (_formKey.currentState!.validate()) {
-                              setState(() {
-                                isLoading = true;
-                              });
+                              setState(() => isLoading = true);
                               try {
-                                if (connectedWithMetamask)
+                                if (connectedWithMetamask) {
                                   await model2.addLandInspector(
                                       address, name, age, desig, city);
-                                else
+                                } else {
                                   await model.addLandInspector(
                                       address, name, age, desig, city);
+                                }
                                 showToast("Successfully Added",
                                     context: context,
                                     backgroundColor: Colors.green);
@@ -418,12 +462,14 @@ class _AddLandInspectorState extends State<AddLandInspector> {
                                     context: context,
                                     backgroundColor: Colors.red);
                               }
-                              setState(() {
-                                isLoading = false;
-                              });
+                              setState(() => isLoading = false);
                             }
-                          }),
-                isLoading ? const CircularProgressIndicator() : Container()
+                          },
+                    child: const Text('Add', style: TextStyle(fontSize: 16)),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                if (isLoading) const Center(child: CircularProgressIndicator()),
               ],
             ),
           ),
@@ -433,60 +479,56 @@ class _AddLandInspectorState extends State<AddLandInspector> {
   }
 
   Widget drawer2() {
-    return Container(
-      decoration: const BoxDecoration(
-        boxShadow: [
-          BoxShadow(blurRadius: 10, color: Colors.black26, spreadRadius: 2)
-        ],
-        color: Color(0xFF272D34),
-      ),
+  return Drawer(
+    child: Container(
       width: 260,
+      decoration: const BoxDecoration(
+        color: Color(0xFF1F2937),
+        boxShadow: [
+          BoxShadow(blurRadius: 10, color: Colors.black26, spreadRadius: 2),
+        ],
+      ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          const SizedBox(
-            width: 20,
+        children: [
+          const SizedBox(height: 40),
+          const Icon(Icons.person, size: 80, color: Colors.white),
+          const SizedBox(height: 12),
+          const Text(
+            'Contract Owner',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          const Icon(
-            Icons.person,
-            size: 50,
-          ),
-          const SizedBox(
-            width: 30,
-          ),
-          const Text('Contract Owner',
-              style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold)),
-          const SizedBox(
-            height: 80,
-          ),
+          const SizedBox(height: 30),
           Expanded(
             child: ListView.separated(
-              separatorBuilder: (context, counter) {
-                return const Divider(
-                  height: 2,
-                );
-              },
+              separatorBuilder: (_, __) =>
+                  const Divider(height: 1, color: Colors.white24),
               itemCount: menuItems.length,
               itemBuilder: (BuildContext context, int index) {
-                return MenuItemTile(
-                  title: menuItems[index].title,
-                  icon: menuItems[index].icon,
-                  isSelected: screen == index,
+                final isSelected = screen == index;
+                return ListTile(
+                  selected: isSelected,
+                  selectedTileColor: Colors.blueGrey.withOpacity(0.4),
+                  leading: Icon(
+                    menuItems[index].icon,
+                    color: isSelected ? Colors.amber : Colors.white70,
+                  ),
+                  title: Text(
+                    menuItems[index].title,
+                    style: TextStyle(
+                      color: isSelected ? Colors.amber : Colors.white70,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                   onTap: () {
                     if (index == 3) {
                       Navigator.pop(context);
-                      // Navigator.push(context,
-                      //     MaterialPageRoute(builder: (context) => home_page()));
-                      Navigator.of(context).pushNamed(
-                        '/',
-                      );
+                      Navigator.of(context).pushNamed('/');
                     }
                     if (index == 1) getLandInspectorInfo();
-
                     setState(() {
                       screen = index;
                     });
@@ -495,11 +537,11 @@ class _AddLandInspectorState extends State<AddLandInspector> {
               },
             ),
           ),
-          const SizedBox(
-            height: 20,
-          )
+          const SizedBox(height: 20),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 }

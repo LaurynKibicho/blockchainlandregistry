@@ -39,7 +39,7 @@ class _CheckPrivateKeyState extends State<CheckPrivateKey> {
     }
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF272D34),
+        backgroundColor: Colors.blueAccent,
         title: const Text('Login'),
       ),
        backgroundColor: Color.fromARGB(255, 137, 196, 233),

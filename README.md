@@ -23,16 +23,9 @@ Key Features: Online transactions, AI/ML for price analysis, E-Vault for documen
 9. NFT.Storage
 10. Hardhat
 
-
-## Demo
-Our Dapp is demonstrated in this video [here](https://youtu.be/9aHm6GLnaRo)
-
-## Run Application on deployed website
-Check out the deployed website [here](https://noplaybutton-41656.web.app/)
-
 ## To Run Application Locally
 1. Clone the github repository and cd to the folder
-2. Install the flutter 3.0.2, nodejs
+2. Install the flutter 3.10.2, nodejs v16
 3. Install ganache and truffle as shown below:
 ```
 npm install -g truffle
@@ -75,3 +68,4 @@ flutter run -d web-server --web-port 5555
 ## Project Flowchart
 <img src="screenshots/flowchart.png" height="450">
 
+flutter run -d web-server --web-port 5555

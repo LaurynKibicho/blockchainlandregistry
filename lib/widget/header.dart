@@ -17,7 +17,7 @@ class HeaderWidget extends StatelessWidget {
     return Container(
       
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 0, 0, 0), // Set the background color to blue
+        color: Color.fromARGB(255, 0, 128, 128), // Set the background color to blue
       ),
    child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -29,23 +29,23 @@ class HeaderWidget extends StatelessWidget {
       height: 70,
       child: Image.network('icons/NPB_Transparent.png'),
     ),
-    const SizedBox(width: 8), // Add some space between icon and text
-    const Text(
-      'NoPlayButton',
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 32,
-        fontStyle: FontStyle.normal,
-        color: Color.fromARGB(255, 255, 255, 255),
-      ),
-    ),
+    // const SizedBox(width: 8), // Add some space between icon and text
+    // const Text(
+    //   '',
+    //   style: TextStyle(
+    //     fontWeight: FontWeight.bold,
+    //     fontSize: 32,
+    //     fontStyle: FontStyle.normal,
+    //     color: Color.fromARGB(255, 255, 255, 255),
+    //   ),
+    // ),
     Padding(
       padding: EdgeInsets.only(left: 400), 
       child: const Text(
-        'Land Registry',
+        'LAND REGISTRY & TRANSFER USING BLOCKCHAIN',
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 32,
+          fontSize: 25,
           fontStyle: FontStyle.normal,
           color: Color.fromARGB(255, 255, 255, 255),
         ),
@@ -78,11 +78,11 @@ class HeaderWidget extends StatelessWidget {
                   };
                   },
                   child: const Text(
-                    'User',
+                    'User (buyer or seller)',
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       color: Color.fromARGB(255, 255, 255, 255),
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.w400,
                       fontStyle: FontStyle.normal,
                       letterSpacing: 1.627907,
@@ -118,7 +118,7 @@ class HeaderWidget extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: 'Poppins',
                        color: Color.fromARGB(255, 255, 255, 255),
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.w400,
                       fontStyle: FontStyle.normal,
                       letterSpacing: 1.627907,
@@ -154,7 +154,7 @@ class HeaderWidget extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: 'Poppins',
                        color: Color.fromARGB(255, 255, 255, 255),
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.w400,
                       fontStyle: FontStyle.normal,
                       letterSpacing: 1.627907,
@@ -182,7 +182,7 @@ class HeaderWidget extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       color: Color.fromARGB(255, 255, 255, 255),
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.w400,
                       fontStyle: FontStyle.normal,
                       letterSpacing: 1.627907,
@@ -191,23 +191,7 @@ class HeaderWidget extends StatelessWidget {
                 ),
               ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.all(14.0),
-            //   child: IconButton(
-            //     onPressed: () {
-            //       launchUrl(
-            //           "https://github.com/saurabh-m-w/Blockchain-Based-Property-Registration");
-            //     },
-            //     iconSize: 30,
-            //     icon: Image.asset(
-            //       'assets/github-logo.png',
-            //       color: Colors.black,
-            //       width: 60.0,
-            //       height: 60.0,
-            //       fit: BoxFit.fill,
-            //     ),
-            //   ),
-            // ),
+          
           ],
         )
       ],

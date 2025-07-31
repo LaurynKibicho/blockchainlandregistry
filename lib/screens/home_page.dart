@@ -20,7 +20,7 @@ class _home_pageState extends State<home_page> {
       isDesktop = true;
     }
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 1, 1, 52),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -50,7 +50,7 @@ class _home_pageState extends State<home_page> {
   ),         child: ClipRRect(
                         borderRadius: BorderRadius.circular(0.3 * 20), // 30% rounded of width or height, assuming 20.0 as initial width/height
     child: Image.network(
-      'icons/land3-bg.png',
+      'icons/roundedsecurity.png',
       // height: 50.0,icons/land3.jpeg
       // width: 50.0,
       

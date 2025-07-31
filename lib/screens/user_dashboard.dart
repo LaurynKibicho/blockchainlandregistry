@@ -187,7 +187,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
         isLoading = false;
       });
     }
-   // screen = 3;
+    // screen = 3;
     isLoading = false;
     setState(() {});
   }
@@ -224,7 +224,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
       setState(() {});
     }
 
-   // screen = 5;
+    // screen = 5;
     isLoading = false;
 
     // SmartDialog.dismiss();
@@ -255,7 +255,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
       setState(() {});
     }
     isLoading = false;
-  //  screen = 4;
+    //  screen = 4;
     setState(() {});
   }
 
@@ -335,7 +335,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
       key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: const Color(0xFF272D34),
+        backgroundColor: Colors.blueAccent,
         leading: isDesktop
             ? Container()
             : GestureDetector(
@@ -354,38 +354,42 @@ class _UserDashBoardState extends State<UserDashBoard> {
       ),
       drawer: drawer2(),
       drawerScrimColor: Colors.transparent,
-      body: Row(
-        children: [
-          isDesktop ? drawer2() : Container(),
-          if (screen == 0)
-            userProfile()
-          else if (screen == 1)
-            addLand()
-          else if (screen == 2)
-            myLands()
-          else if (screen == 3)
-            landGallery()
-          else if (screen == 4)
+      body: Container(
+        color: const Color(0xFFF4F6F8),
+        child: Row(
+          children: [
+            isDesktop
+                ? drawer2()
+                : Container(), // show permanent drawer on desktop
             Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(25),
-                child: receivedRequest(),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: screen == 0
+                    ? userProfile()
+                    : screen == 1
+                        ? addLand()
+                        : screen == 2
+                            ? myLands()
+                            : screen == 3
+                                ? landGallery()
+                                : screen == 4
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(25),
+                                        child: receivedRequest(),
+                                      )
+                                    : Padding(
+                                        padding: const EdgeInsets.all(25),
+                                        child: sentRequest(),
+                                      ),
               ),
-            )
-          else if (screen == 5)
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(25),
-                child: sentRequest(),
-              ),
-            )
-        ],
-      ),
+            ),
+          ],
+        ),
+      ), /*  */
     );
   }
 
-Widget sentRequest() {
-   
+  Widget sentRequest() {
     return ListView.builder(
       itemCount: sentRequestInfo == null ? 1 : sentRequestInfo.length + 1,
       itemBuilder: (BuildContext context, int index) {
@@ -426,7 +430,7 @@ Widget sentRequest() {
                   ),
                   Expanded(
                     child: Center(
-                      child: Text('Price(in ₹)',
+                      child: Text('Price(in Ksh)',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
                     flex: 2,
@@ -512,7 +516,6 @@ Widget sentRequest() {
   }
 
   Widget receivedRequest() {
-    
     return ListView.builder(
       itemCount:
           receivedRequestInfo == null ? 1 : receivedRequestInfo.length + 1,
@@ -665,7 +668,6 @@ Widget sentRequest() {
     );
   }
 
-
   Widget landGallery() {
     if (isLoading) {
       return const Expanded(child: Center(child: CircularProgressIndicator()));
@@ -737,7 +739,7 @@ Widget sentRequest() {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => viewLandDetails(
+                        builder: (context) => ViewLandDetails(
                               allLatitude: allLatiLongi[0],
                               allLongitude: allLatiLongi[1],
                               landinfo: landinfo,
@@ -802,209 +804,177 @@ Widget sentRequest() {
     );
   }
 
+ Widget _buildTextField({
+  required String label,
+  required String hint,
+  String? validatorMsg,
+  TextInputType? keyboardType,
+  void Function(String)? onChanged,
+  TextEditingController? controller,
+  FocusNode? focusNode,
+  TextInputFormatter? inputFormatter,
+  IconData? prefixIcon,
+}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 16),
+    child: TextFormField(
+      style: const TextStyle(fontSize: 16),
+      keyboardType: keyboardType,
+      controller: controller,
+      focusNode: focusNode,
+      onChanged: onChanged,
+      inputFormatters: inputFormatter != null ? [inputFormatter] : [],
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return validatorMsg ?? 'This field is required';
+        }
+        return null;
+      },
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        isDense: true,
+        prefixIcon: prefixIcon != null
+            ? Icon(prefixIcon, color: Colors.grey.shade600)
+            : null,
+        filled: true,
+        fillColor: Colors.grey.shade100,
+        hintStyle: TextStyle(color: Colors.grey.shade500),
+        labelStyle: TextStyle(
+          color: Colors.grey.shade800,
+          fontWeight: FontWeight.w500,
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.blueAccent, width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.redAccent, width: 1.2),
+        ),
+      ),
+    ),
+  );
+}
+
+
   Widget addLand() {
     return Center(
       widthFactor: isDesktop ? 2 : 1,
       child: Container(
-        margin: const EdgeInsets.all(10),
-        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
         decoration: BoxDecoration(
-            //color: Color(0xFFBb3b3cc),
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            border: Border.all()),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10,
+              offset: Offset(0, 4),
+            ),
+          ],
+          border: Border.all(color: Colors.grey.shade300),
+        ),
         width: width,
         child: Form(
           key: _formKey,
           child: Column(
-            // scrollDirection: Axis.vertical,
-            // shrinkWrap: true,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: TextFormField(
-                  style: const TextStyle(
-                    fontSize: 15,
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  onChanged: (val) {
-                    area = val;
-                  },
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
-                  ],
-                  decoration: const InputDecoration(
-                    isDense: true, // Added this
-                    contentPadding: EdgeInsets.all(12),
-                    border: OutlineInputBorder(),
-                    labelText: 'Area(SqFt)',
-                    hintText: 'Enter Area in SqFt',
-                  ),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Add Land Details',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: CompositedTransformTarget(
-                  link: _layerLink,
-                  child: TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter Land Address';
-                      }
-                      return null;
-                    },
-                    style: const TextStyle(
-                      fontSize: 15,
-                    ),
-                    controller: addressController,
-                    onChanged: (value) {
-                      if (value.isNotEmpty) {
-                        autocomplete(value);
-                        _overlayEntry.remove();
-                        _overlayEntry = _createOverlayEntry();
-                        Overlay.of(context)!.insert(_overlayEntry);
-                      } else {
-                        if (predictions.isNotEmpty && mounted) {
-                          setState(() {
-                            predictions = [];
-                          });
-                        }
-                      }
-                    },
-                    focusNode: _focusNode,
-                    //obscureText: true,
-                    decoration: const InputDecoration(
-                      isDense: true, // Added this
-                      contentPadding: EdgeInsets.all(12),
-                      border: OutlineInputBorder(),
-                      labelText: 'Address',
-                      hintText: 'Enter Land Address',
+              const SizedBox(height: 20),
+              _buildTextField(
+                label: 'Area (SqFt)',
+                hint: 'Enter Area in SqFt',
+                validatorMsg: 'Please enter area',
+                keyboardType: TextInputType.number,
+                onChanged: (val) => area = val,
+                inputFormatter: FilteringTextInputFormatter.digitsOnly,
+              ),
+              _buildTextField(
+                label: 'Address',
+                hint: 'Enter Land Address',
+                controller: addressController,
+                validatorMsg: 'Please enter Land Address',
+                focusNode: _focusNode,
+                onChanged: (value) {
+                  if (value.isNotEmpty) {
+                    autocomplete(value);
+                    _overlayEntry.remove();
+                    _overlayEntry = _createOverlayEntry();
+                    Overlay.of(context)!.insert(_overlayEntry);
+                  } else if (predictions.isNotEmpty && mounted) {
+                    setState(() => predictions = []);
+                  }
+                },
+              ),
+              _buildTextField(
+                label: 'Land Price',
+                hint: 'Enter Land Price',
+                validatorMsg: 'Please enter Land Price',
+                keyboardType: TextInputType.number,
+                onChanged: (val) => landPrice = val,
+                inputFormatter: FilteringTextInputFormatter.digitsOnly,
+              ),
+              _buildTextField(
+                label: 'PID',
+                hint: 'Enter Property ID',
+                validatorMsg: 'Please enter PID',
+                keyboardType: TextInputType.number,
+                onChanged: (val) => propertyID = val,
+                inputFormatter: FilteringTextInputFormatter.digitsOnly,
+              ),
+              _buildTextField(
+                label: 'Survey No.',
+                hint: 'Survey Number',
+                validatorMsg: 'Please enter Survey Number',
+                onChanged: (val) => surveyNo = val,
+              ),
+              const SizedBox(height: 10),
+              Center(
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
+                    backgroundColor: Colors.deepPurple,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter Land Price';
-                    }
-                    return null;
-                  },
-                  //maxLength: 12,
-                  style: const TextStyle(
-                    fontSize: 15,
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
-                  ],
-                  onChanged: (val) {
-                    landPrice = val;
-                  },
-                  //obscureText: true,
-                  decoration: const InputDecoration(
-                    isDense: true, // Added this
-                    contentPadding: EdgeInsets.all(12),
-                    border: OutlineInputBorder(),
-                    labelText: 'Land Price',
-                    hintText: 'Enter Land Price',
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter PID';
-                    }
-                    return null;
-                  },
-                  style: const TextStyle(
-                    fontSize: 15,
-                  ),
-                  //maxLength: 10,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
-                  ],
-                  onChanged: (val) {
-                    propertyID = val;
-                  },
-                  //obscureText: true,
-                  decoration: const InputDecoration(
-                    isDense: true, // Added this
-                    contentPadding: EdgeInsets.all(12),
-                    border: OutlineInputBorder(),
-                    labelText: 'PID',
-                    hintText: 'Enter Property ID',
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  onChanged: (val) {
-                    surveyNo = val;
-                  },
-                  style: const TextStyle(
-                    fontSize: 15,
-                  ),
-                  //obscureText: true,
-                  decoration: const InputDecoration(
-                    isDense: true, // Added this
-                    contentPadding: EdgeInsets.all(12),
-                    border: OutlineInputBorder(),
-                    labelText: 'Survey No.',
-                    hintText: 'Survey No.',
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: MaterialButton(
-                  color: Colors.grey,
+                  icon: const Icon(Icons.map),
+                  label: const Text('Draw Land on Map'),
                   onPressed: () async {
                     allLatiLongi = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const landOnMap()));
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const landOnMap()),
+                    );
                     if (allLatiLongi.isEmpty || allLatiLongi == "") {
                       showToast("Please select area on map",
                           context: context, backgroundColor: Colors.red);
                     }
-                    //print(res);
                   },
-                  child: const Text('Draw Land on Map'),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    MaterialButton(
-                      color: Colors.grey,
-                      onPressed: pickDocument,
-                      child: const Text('Upload Document'),
-                    ),
-                    Text(docuName)
-                  ],
-                ),
-              ),
-              CustomButton(
+              const SizedBox(height: 20),
+              Center(
+                child: CustomButton(
                   'Add',
                   isLoading || !isUserVerified
                       ? null
@@ -1012,57 +982,55 @@ Widget sentRequest() {
                           if (_formKey.currentState!.validate() &&
                               allLatiLongi.isNotEmpty &&
                               allLatiLongi != "") {
-                            setState(() {
-                              isLoading = true;
-                            });
+                            setState(() => isLoading = true);
                             try {
-                              SmartDialog.showLoading(
-                                  msg: "Uploading Document");
-                              bool isFileupload = await uploadDocument();
-                              SmartDialog.dismiss();
-                              if (isFileupload) {
-                                if (connectedWithMetamask) {
-                                  await model2.addLand(
-                                      area,
-                                      addressController.text,
-                                      allLatiLongi,
-                                      landPrice,
-                                      propertyID,
-                                      surveyNo,
-                                      docUrl);
-                                } else {
-                                  await model.addLand(
-                                      area,
-                                      addressController.text,
-                                      allLatiLongi,
-                                      landPrice,
-                                      propertyID,
-                                      surveyNo,
-                                      docUrl);
-                                }
-                                showToast("Land Successfully Added",
-                                    context: context,
-                                    backgroundColor: Colors.green);
-                                isFilePicked = false;
+                              if (connectedWithMetamask) {
+                                await model2.addLand(
+                                  area,
+                                  addressController.text,
+                                  allLatiLongi,
+                                  landPrice,
+                                  propertyID,
+                                  surveyNo,
+                                  "",
+                                );
+                              } else {
+                                await model.addLand(
+                                  area,
+                                  addressController.text,
+                                  allLatiLongi,
+                                  landPrice,
+                                  propertyID,
+                                  surveyNo,
+                                  "",
+                                );
                               }
+                              showToast("Land Successfully Added",
+                                  context: context,
+                                  backgroundColor: Colors.green);
                             } catch (e) {
                               print(e);
                               showToast("Something Went Wrong",
                                   context: context,
                                   backgroundColor: Colors.red);
                             }
-
-                            setState(() {
-                              isLoading = false;
-                            });
+                            setState(() => isLoading = false);
                           }
-
-                          //model.makePaymentTestFun();
-                        }),
+                        },
+                ),
+              ),
               if (!isUserVerified)
-                const Text('You are not verified',
-                    style: TextStyle(color: Colors.redAccent)),
-              isLoading ? spinkitLoader : Container()
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(
+                      'You are not verified',
+                      style: TextStyle(color: Colors.redAccent),
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 20),
+              if (isLoading) Center(child: spinkitLoader),
             ],
           ),
         ),
@@ -1072,142 +1040,189 @@ Widget sentRequest() {
 
   Widget userProfile() {
     if (isLoading) {
-      return const Expanded(child: Center(child: CircularProgressIndicator()));
+      return const Expanded(
+        child: Center(child: CircularProgressIndicator()),
+      );
     }
+
     isUserVerified = userInfo[8];
+
     return Expanded(
       child: Center(
         child: Container(
-          width: width,
-          margin: const EdgeInsets.all(10),
-          padding: const EdgeInsets.all(10),
+          width: width > 500 ? 500 : width * 0.9,
+          margin: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
           decoration: BoxDecoration(
-              //color: Color(0xFFBb3b3cc),
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              border: Border.all()),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Your Profile',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            color: const Color(0xFFFAFAFA),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.blueAccent.shade100.withOpacity(0.5),
+                blurRadius: 10,
+                spreadRadius: 2,
+                offset: const Offset(2, 4),
               ),
-              userInfo[8]
-                  ? Row(
-                      children: const [
-                        Text(
-                          'Verified',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.green),
-                        ),
-                        Icon(
-                          Icons.verified,
-                          color: Colors.green,
-                        )
-                      ],
-                    )
-                  : const Text(
-                      'Not Yet Verified',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent),
-                    ),
-              CustomTextFiled(userInfo[0].toString(), 'Wallet Address'),
-              CustomTextFiled(userInfo[1].toString(), 'Name'),
-              CustomTextFiled(userInfo[2].toString(), 'Age'),
-              CustomTextFiled(userInfo[3].toString(), 'City'),
-              CustomTextFiled(userInfo[4].toString(), 'Adhar Number'),
-              CustomTextFiled(userInfo[5].toString(), 'Pan'),
-              TextButton(
-                onPressed: () {
-                  launchUrl(userInfo[6].toString());
-                },
-                child: const Text(
-                  '  View Document',
-                  style: TextStyle(color: Colors.blue),
-                ),
-              ),
-              CustomTextFiled(userInfo[7].toString(), 'Mail'),
             ],
+            border: Border.all(color: Colors.blueAccent.shade100),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Your Profile',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: isUserVerified
+                            ? Colors.green.shade100
+                            : Colors.blue.shade100,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            isUserVerified
+                                ? Icons.verified
+                                : Icons.info_outline,
+                            color: isUserVerified
+                                ? Colors.green
+                                : Colors.blueAccent,
+                            size: 18,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            isUserVerified ? 'Verified' : 'Not Verified',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: isUserVerified
+                                  ? Colors.green.shade700
+                                  : Colors.blueAccent,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                customTextField('Wallet Address', userInfo[0].toString(),
+                    readOnly: true),
+                const SizedBox(height: 12),
+                customTextField('Name', userInfo[1].toString(), readOnly: true),
+                const SizedBox(height: 12),
+                customTextField('Age', userInfo[2].toString(), readOnly: true),
+                const SizedBox(height: 12),
+                customTextField('City', userInfo[3].toString(), readOnly: true),
+                const SizedBox(height: 12),
+                customTextField('ID Number', userInfo[4].toString(),
+                    readOnly: true),
+                const SizedBox(height: 12),
+                customTextField('Mobile Number', userInfo[5].toString(),
+                    readOnly: true),
+                const SizedBox(height: 12),
+                customTextField('Email', userInfo[7].toString(),
+                    readOnly: true),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget drawer2() {
-    return Container(
-      decoration: const BoxDecoration(
-        boxShadow: [
-          BoxShadow(blurRadius: 10, color: Colors.black26, spreadRadius: 2)
-        ],
-        color: Color(0xFF272D34),
+  Widget customTextField(
+    String label,
+    String value, {
+    bool readOnly = false,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        initialValue: value,
+        readOnly: readOnly,
+        decoration: InputDecoration(
+          labelText: label,
+          filled: true,
+          fillColor: readOnly ? Colors.grey.shade100 : Colors.white,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+        ),
+        style: const TextStyle(fontSize: 15),
       ),
-      width: 250,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          const SizedBox(
-            width: 20,
-          ),
-          const Icon(
-            Icons.person,
-            size: 50,
-          ),
-          const SizedBox(
-            width: 30,
-          ),
-          Text(name,
+    );
+  }
+
+  Widget drawer2() {
+    return Drawer(
+      child: Container(
+        color: const Color(0xFF1F2937), // dark background
+        child: Column(
+          children: [
+            const SizedBox(height: 40),
+            const Icon(Icons.person, size: 80, color: Colors.white),
+            const SizedBox(height: 12),
+            Text(
+              name, // dynamic user name
               style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold)),
-          const SizedBox(
-            height: 80,
-          ),
-          Expanded(
-            child: ListView.separated(
-              separatorBuilder: (context, counter) {
-                return const Divider(
-                  height: 2,
-                );
-              },
-              itemCount: menuItems.length,
-              itemBuilder: (BuildContext context, int index) {
-                return MenuItemTile(
-                  title: menuItems[index].title,
-                  icon: menuItems[index].icon,
-                  isSelected: screen == index,
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 30),
+            Expanded(
+              child: ListView.separated(
+                itemCount: menuItems.length,
+                separatorBuilder: (_, __) =>
+                    const Divider(color: Colors.white30),
+                itemBuilder: (context, index) => ListTile(
+                  leading: Icon(
+                    menuItems[index].icon,
+                    color: screen == index ? Colors.amber : Colors.white,
+                  ),
+                  title: Text(
+                    menuItems[index].title,
+                    style: TextStyle(
+                      color: screen == index ? Colors.amber : Colors.white,
+                    ),
+                  ),
                   onTap: () {
                     if (index == 6) {
                       Navigator.pop(context);
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const home_page()));
-                      Navigator.of(context).pushNamed(
-                        '/',
-                      );
+                      Navigator.of(context).pushNamed('/');
                     }
                     if (index == 0) getProfileInfo();
                     if (index == 2) getLandInfo();
                     if (index == 3) getLandGallery();
                     if (index == 4) getMyReceivedRequest();
                     if (index == 5) getMySentRequest();
+
                     setState(() {
                       screen = index;
                     });
                   },
-                );
-              },
+                ),
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 20,
-          )
-        ],
+            const SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }
@@ -1265,7 +1280,7 @@ Widget sentRequest() {
                       height: 10,
                     ),
                     const Text(
-                      "Total Amount in ₹",
+                      "Total Amount in Ksh",
                       style: TextStyle(fontSize: 20),
                     ),
                     Text(
@@ -1276,7 +1291,7 @@ Widget sentRequest() {
                       height: 15,
                     ),
                     Text(
-                      '1 ETH = ' + ethval.toString() + '₹',
+                      '1 ETH = ' + ethval.toString() + 'Ksh',
                     ),
                     const SizedBox(
                       height: 15,

@@ -6,7 +6,6 @@ import 'package:land_registration/constant/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import '../providers/LandRegisterModel.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:mapbox_search/mapbox_search.dart';
 import '../constant/utils.dart';
@@ -20,15 +19,11 @@ class RegisterUser extends StatefulWidget {
 }
 
 class _RegisterUserState extends State<RegisterUser> {
-  late String name, age, city, adharNumber, panNumber, document, email;
+  late String name, age, city, adharNumber, panNumber, email;
 
   double width = 590;
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false, isAdded = false;
-  String docuName = "";
-  late PlatformFile documentFile;
-  String cid = "", docUrl = "";
-
   List<MapBoxPlace> predictions = [];
   late PlacesSearch placesSearch;
   final FocusNode _focusNode = FocusNode();
@@ -38,45 +33,42 @@ class _RegisterUserState extends State<RegisterUser> {
 
   OverlayEntry _createOverlayEntry() {
     return OverlayEntry(
-        builder: (context) => Positioned(
-              width: 540,
-              child: CompositedTransformFollower(
-                link: this._layerLink,
-                showWhenUnlinked: false,
-                offset: Offset(0.0, 40 + 5.0),
-                child: Material(
-                  elevation: 4.0,
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    children: List.generate(
-                        predictions.length,
-                        (index) => ListTile(
-                              title:
-                                  Text(predictions[index].placeName.toString()),
-                              onTap: () {
-                                addressController.text =
-                                    predictions[index].placeName.toString();
-
-                                setState(() {});
-                                _overlayEntry.remove();
-                                _overlayEntry.dispose();
-                              },
-                            )),
-                  ),
+      builder: (context) => Positioned(
+        width: 540,
+        child: CompositedTransformFollower(
+          link: _layerLink,
+          showWhenUnlinked: false,
+          offset: const Offset(0.0, 45.0),
+          child: Material(
+            elevation: 4.0,
+            borderRadius: BorderRadius.circular(8),
+            child: ListView(
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              children: List.generate(
+                predictions.length,
+                (index) => ListTile(
+                  title: Text(predictions[index].placeName.toString()),
+                  onTap: () {
+                    addressController.text =
+                        predictions[index].placeName.toString();
+                    setState(() {});
+                    _overlayEntry.remove();
+                    _overlayEntry.dispose();
+                  },
                 ),
               ),
-            ));
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> autocomplete(value) async {
     List<MapBoxPlace>? res = await placesSearch.getPlaces(value);
     if (res != null) predictions = res;
     setState(() {});
-    // print(res);
-    // print(res![0].placeName);
-    // print(res![0].geometry!.coordinates);
-    // print(res![0]);
   }
 
   @override
@@ -88,7 +80,7 @@ class _RegisterUserState extends State<RegisterUser> {
 
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
-        _overlayEntry = this._createOverlayEntry();
+        _overlayEntry = _createOverlayEntry();
         Overlay.of(context)!.insert(_overlayEntry);
       } else {
         _overlayEntry.remove();
@@ -97,46 +89,36 @@ class _RegisterUserState extends State<RegisterUser> {
     super.initState();
   }
 
-  pickDocument() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['jpg', 'pdf'],
+  Widget customTextField(String label, String hint, Function(String) onChanged,
+      {bool isNumber = false,
+      String? Function(String?)? validator,
+      TextEditingController? controller,
+      FocusNode? focusNode}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        controller: controller,
+        focusNode: focusNode,
+        validator: validator ??
+            (val) => val == null || val.isEmpty ? 'Required' : null,
+        onChanged: onChanged,
+        keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+        inputFormatters:
+            isNumber ? [FilteringTextInputFormatter.digitsOnly] : [],
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.grey.shade100,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          labelText: label,
+          hintText: hint,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+        ),
+      ),
     );
-
-    if (result != null) {
-      docuName = result.files.single.name;
-      documentFile = result.files.first;
-    }
-    setState(() {});
-  }
-
-  Future<bool> uploadDocument() async {
-    String url = "https://api.nft.storage/upload";
-    var header = {"Authorization": "Bearer $nftStorageApiKey"};
-
-    if (docuName != "") {
-      try {
-        final response = await http.post(Uri.parse(url),
-            headers: header, body: documentFile.bytes);
-        var data = jsonDecode(response.body);
-        //print(data);
-        if (data['ok']) {
-          cid = data["value"]["cid"];
-          docUrl = "https://" + cid + ".ipfs.dweb.link";
-          print(docUrl);
-          return true;
-        }
-      } catch (e) {
-        print(e);
-        showToast("Something went wrong,while document uploading",
-            context: context, backgroundColor: Colors.red);
-      }
-    } else {
-      showToast("Choose Document",
-          context: context, backgroundColor: Colors.red);
-      return false;
-    }
-    return false;
   }
 
   @override
@@ -145,285 +127,171 @@ class _RegisterUserState extends State<RegisterUser> {
     var model2 = Provider.of<MetaMaskProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF272D34),
-        elevation: 0,
+        backgroundColor: Color.fromARGB(255, 25, 132, 255),
         centerTitle: true,
-        title: const Text(
-          'User Registration',
-        ),
+        title: const Text('User Registration'),
       ),
       body: Center(
-        child: Material(
-          elevation: 10,
+        child: SingleChildScrollView(
           child: Container(
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.all(20),
             width: width,
+            constraints: const BoxConstraints(maxWidth: 600),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                )
+              ],
+            ),
             child: Form(
               key: _formKey,
               child: Column(
-                // scrollDirection: Axis.vertical,
-                // shrinkWrap: true,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: TextFormField(
-                      style: const TextStyle(
-                        fontSize: 15,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
-                      onChanged: (val) {
-                        name = val;
-                      },
-                      decoration: const InputDecoration(
-                        isDense: true, // Added this
-                        contentPadding: EdgeInsets.all(12),
-                        border: OutlineInputBorder(),
-                        labelText: 'Name',
-                        hintText: 'Enter Name',
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  const Center(
+                    child: Text(
+                      'Blockchain Title Deed Registry',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueAccent,
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter age';
-                        }
-                        return null;
-                      },
-                      style: const TextStyle(
-                        fontSize: 15,
-                      ),
-                      onChanged: (val) {
-                        age = val;
-                      },
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
-                      ],
-                      decoration: const InputDecoration(
-                        isDense: true, // Added this
-                        contentPadding: EdgeInsets.all(12),
-                        border: OutlineInputBorder(),
-                        labelText: 'Age',
-                        hintText: 'Enter Age',
+                  const SizedBox(height: 8),
+                  const Center(
+                    child: Text(
+                      'Please register to proceed',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: CompositedTransformTarget(
-                      link: this._layerLink,
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter some text';
+                  customTextField('Name', 'Enter Name', (val) => name = val),
+                  customTextField('Age', 'Enter Age', (val) => age = val,
+                      isNumber: true),
+                  CompositedTransformTarget(
+                    link: _layerLink,
+                    child: customTextField(
+                      'Address',
+                      'Enter Address',
+                      (val) {
+                        if (val.isNotEmpty) {
+                          autocomplete(val);
+                          _overlayEntry.remove();
+                          _overlayEntry = _createOverlayEntry();
+                          Overlay.of(context)!.insert(_overlayEntry);
+                        } else {
+                          if (predictions.isNotEmpty && mounted) {
+                            setState(() {
+                              predictions = [];
+                            });
                           }
-                          return null;
-                        },
-                        style: const TextStyle(
-                          fontSize: 15,
-                        ),
-
-                        controller: addressController,
-                        onChanged: (value) {
-                          if (value.isNotEmpty) {
-                            autocomplete(value);
-                            _overlayEntry.remove();
-                            _overlayEntry = this._createOverlayEntry();
-                            Overlay.of(context)!.insert(_overlayEntry);
-                          } else {
-                            if (predictions.length > 0 && mounted) {
-                              setState(() {
-                                predictions = [];
-                              });
-                            }
-                          }
-                        },
-                        focusNode: this._focusNode,
-                        //obscureText: true,
-                        decoration: const InputDecoration(
-                          isDense: true, // Added this
-                          contentPadding: EdgeInsets.all(12),
-                          border: OutlineInputBorder(),
-                          labelText: 'Address',
-                          hintText: 'Enter Address',
-                        ),
-                      ),
+                        }
+                      },
+                      controller: addressController,
+                      focusNode: _focusNode,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: TextFormField(
+                  customTextField('Id Number', 'Enter ID Number',
+                      (val) => adharNumber = val, isNumber: true,
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter Adhar number';
-                        } else if (value.length != 12)
-                          return 'Please enter Valid Adhar number';
-                        return null;
-                      },
-                      //maxLength: 12,
-                      style: const TextStyle(
-                        fontSize: 15,
-                      ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
-                      ],
-                      onChanged: (val) {
-                        adharNumber = val;
-                      },
-                      //obscureText: true,
-                      decoration: const InputDecoration(
-                        isDense: true, // Added this
-                        contentPadding: EdgeInsets.all(12),
-                        border: OutlineInputBorder(),
-                        labelText: 'Adhar',
-                        hintText: 'Enter Adhar Number',
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: TextFormField(
+                    if (value == null || value.isEmpty)
+                      return 'Please enter ID Number';
+                    if (value.length != 8)
+                      return 'Please enter Valid ID number';
+                    return null;
+                  }),
+                  customTextField('Mobile Number', 'Enter Mobile Number',
+                      (val) => panNumber = val, isNumber: true,
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter Pan Number';
-                        } else if (value.length != 10)
-                          return 'Please enter Valid Adhar number';
-                        return null;
-                      },
-                      style: const TextStyle(
-                        fontSize: 15,
-                      ),
-                      //maxLength: 10,
-
-                      onChanged: (val) {
-                        panNumber = val;
-                      },
-                      //obscureText: true,
-                      decoration: const InputDecoration(
-                        isDense: true, // Added this
-                        contentPadding: EdgeInsets.all(12),
-                        border: OutlineInputBorder(),
-                        labelText: 'Pan',
-                        hintText: 'Enter Pan Number',
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      children: [
-                        MaterialButton(
-                          color: Colors.grey,
-                          onPressed: pickDocument,
-                          child: const Text('Upload Document'),
-                        ),
-                        Text(docuName)
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: TextFormField(
+                    if (value == null || value.isEmpty)
+                      return 'Please enter Mobile Number';
+                    if (value.length != 10)
+                      return 'Please enter Valid Mobile number';
+                    return null;
+                  }),
+                  customTextField('Email', 'Enter Email', (val) => email = val,
                       validator: (value) {
-                        RegExp regex = RegExp(
-                            r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-                            r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-                            r"{0,253}[a-zA-Z0-9])?)*$");
-                        if (!regex.hasMatch(value!) || value == null)
-                          return 'Enter a valid email address';
-                        else
-                          return null;
-                      },
-                      style: const TextStyle(
-                        fontSize: 15,
-                      ),
-                      onChanged: (val) {
-                        email = val;
-                      },
-                      //obscureText: true,
-                      decoration: const InputDecoration(
-                        isDense: true, // Added this
-                        contentPadding: EdgeInsets.all(12),
-                        border: OutlineInputBorder(),
-                        labelText: 'Email',
-                        hintText: 'Enter Email',
-                      ),
-                    ),
-                  ),
+                    RegExp regex = RegExp(
+                        r"^[a-zA-Z0-9.!#\$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+                        r"{0,253}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+                        r"{0,253}[a-zA-Z0-9])?)*");
+                    if (!regex.hasMatch(value ?? ''))
+                      return 'Enter a valid email address';
+                    return null;
+                  }),
+                  const SizedBox(height: 20),
                   isAdded
-                      ? CustomButton('Contine to Login', () {
-                          Navigator.pop(context);
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => UserDashBoard()));
-                          Navigator.of(context).pushNamed(
-                            '/user',
-                          );
-                        })
-                      : CustomButton(
-                          'Add',
-                          isLoading
-                              ? null
-                              : () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    setState(() {
-                                      isLoading = true;
-                                    });
-                                    try {
-                                      SmartDialog.showLoading(
-                                          msg: "Uploading Document");
-                                      bool isFileupload =
-                                          await uploadDocument();
-                                      SmartDialog.dismiss();
-                                      if (isFileupload) {
-                                        if (connectedWithMetamask)
+                      ? Center(
+                          child: ElevatedButton(
+                            onPressed: () =>
+                                Navigator.of(context).pushNamed('/user'),
+                            child: const Text('Continue to Login'),
+                          ),
+                        )
+                      : Center(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 40, vertical: 14),
+                              backgroundColor: Colors.blueAccent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            onPressed: isLoading
+                                ? null
+                                : () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      setState(() => isLoading = true);
+                                      try {
+                                        if (connectedWithMetamask) {
                                           await model2.registerUser(
                                               name,
                                               age,
                                               addressController.text,
                                               adharNumber,
                                               panNumber,
-                                              docUrl,
+                                              '',
                                               email);
-                                        else
+                                        } else {
                                           await model.registerUser(
                                               name,
                                               age,
                                               addressController.text,
                                               adharNumber,
                                               panNumber,
-                                              docUrl,
+                                              '',
                                               email);
+                                        }
                                         showToast("Successfully Registered",
                                             context: context,
                                             backgroundColor: Colors.green);
-                                        isAdded = true;
+                                        setState(() => isAdded = true);
+                                      } catch (e) {
+                                        print(e);
+                                        showToast("Something Went Wrong",
+                                            context: context,
+                                            backgroundColor: Colors.red);
                                       }
-                                    } catch (e) {
-                                      print(e);
-                                      showToast("Something Went Wrong",
-                                          context: context,
-                                          backgroundColor: Colors.red);
+                                      setState(() => isLoading = false);
                                     }
-
-                                    setState(() {
-                                      isLoading = false;
-                                    });
-                                  }
-
-                                  //model.makePaymentTestFun();
-                                }),
-                  isLoading ? const CircularProgressIndicator() : Container()
+                                  },
+                            child: const Text('Register',
+                                style: TextStyle(fontSize: 16)),
+                          ),
+                        ),
+                  const SizedBox(height: 16),
+                  if (isLoading)
+                    const Center(child: CircularProgressIndicator())
                 ],
               ),
             ),

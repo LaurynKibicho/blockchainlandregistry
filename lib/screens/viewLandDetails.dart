@@ -3,257 +3,184 @@ import 'package:land_registration/constant/constants.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import '../constant/utils.dart';
 
-class viewLandDetails extends StatefulWidget {
+class ViewLandDetails extends StatefulWidget {
   final String allLatitude;
   final String allLongitude;
   final LandInfo landinfo;
-  const viewLandDetails(
-      {Key? key,
-      required this.allLatitude,
-      required this.allLongitude,
-      required this.landinfo})
-      : super(key: key);
+
+  const ViewLandDetails({
+    Key? key,
+    required this.allLatitude,
+    required this.allLongitude,
+    required this.landinfo,
+  }) : super(key: key);
 
   @override
-  _viewLandDetailsState createState() => _viewLandDetailsState();
+  _ViewLandDetailsState createState() => _ViewLandDetailsState();
 }
 
-class _viewLandDetailsState extends State<viewLandDetails> {
+class _ViewLandDetailsState extends State<ViewLandDetails> {
   late MapboxMapController mapController;
 
-  bool isSatelliteView = true;
-  //String allLatitude = "17.48444169085768,17.48505567873093,17.48417562880215,17.48395049906658";
-  // String allLongitude = "75.29472411820925,75.2966982240448,75.29665530869948,75.2950674409636";
+  void _onMapCreated(MapboxMapController controller) async {
+    mapController = controller;
+
+    List<double> latitudes =
+        widget.allLatitude.split(',').map((e) => double.parse(e)).toList();
+    List<double> longitudes =
+        widget.allLongitude.split(',').map((e) => double.parse(e)).toList();
+
+    await Future.delayed(const Duration(seconds: 3));
+    mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+      zoom: 15.0,
+      target: LatLng(latitudes[1], longitudes[0]),
+    )));
+
+    for (int i = 0; i < latitudes.length; i++) {
+      mapController.addCircle(CircleOptions(
+        geometry: LatLng(latitudes[i], longitudes[i]),
+        circleRadius: 5,
+        circleColor: "#ff0000",
+        draggable: false,
+      ));
+    }
+
+    mapController.addFill(
+      FillOptions(
+        fillColor: "#2596be",
+        fillOutlineColor: "#2596be",
+        geometry: [
+          List.generate(latitudes.length,
+              (index) => LatLng(latitudes[index], longitudes[index]))
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetail(String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+              width: 250,
+              child: Text(
+                "$title:",
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 18),
+              )),
+          Expanded(
+            child: Text(value, style: const TextStyle(fontSize: 18)),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF272D34),
         title: const Text('Land Details'),
+        backgroundColor: Colors.blueAccent,
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: 500,
-                width: 700,
-                child: MapboxMap(
-                    accessToken: mapBoxApiKey,
-                    styleString:
-                        "mapbox://styles/saurabhmw/cky4ce7f61b2414nuh9ng177k",
-                    initialCameraPosition: CameraPosition(
-                      zoom: 3.0,
-                      target: const LatLng(19.663280, 75.300293),
-                    ),
-                    compassEnabled: false,
-                    onMapCreated: (MapboxMapController controller) async {
-                      List<double> lati = widget.allLatitude
-                          .split(',')
-                          .map((a) => double.parse(a))
-                          .toList();
-
-                      List<double> longi = widget.allLongitude
-                          .split(',')
-                          .map((a) => double.parse(a))
-                          .toList();
-                      mapController = controller;
-
-                      await Future.delayed(const Duration(seconds: 3));
-                      mapController.animateCamera(
-                          CameraUpdate.newCameraPosition(CameraPosition(
-                        zoom: 15.0,
-                        target: LatLng(lati[1], longi[0]),
-                      )));
-                      for (int i = 0; i < lati.length; i++) {
-                        mapController.addCircle(CircleOptions(
-                            geometry: LatLng(lati[i], longi[i]),
-                            circleRadius: 5,
-                            circleColor: "#ff0000",
-                            draggable: true));
-                      }
-                      // mapController.addCircles(List.generate(
-                      //     lati.length,
-                      //     (index) => CircleOptions(
-                      //         geometry: LatLng(lati[index], longi[index]),
-                      //         circleRadius: 5,
-                      //         circleColor: "#ff0000",
-                      //         draggable: false)));
-                      //
-                      mapController.addFill(
-                        FillOptions(
-                          fillColor: "#2596be",
-                          fillOutlineColor: "#2596be",
-                          geometry: [
-                            List.generate(lati.length,
-                                (index) => LatLng(lati[index], longi[index]))
-                          ],
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                /// Map Card
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  child: SizedBox(
+                    height: 500,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: MapboxMap(
+                        accessToken: mapBoxApiKey,
+                        styleString:
+                            "mapbox://styles/saurabhmw/cky4ce7f61b2414nuh9ng177k",
+                        initialCameraPosition: const CameraPosition(
+                          zoom: 3.0,
+                          target: LatLng(19.663280, 75.300293),
                         ),
-                      );
-                    }),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Center(
-                  child: Text('Details',
-                      style:
-                          TextStyle(fontSize: 35, color: Colors.blueAccent))),
-              const SizedBox(
-                height: 10,
-              ),
-              const SizedBox(width: 700, child: Divider()),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: 700,
-                child: Table(
-                  columnWidths: const {
-                    0: FractionColumnWidth(0.3),
-                    1: FractionColumnWidth(0.7)
-                  },
-                  children: [
-                    TableRow(children: [
-                      const Text(
-                        "Area : ",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
+                        compassEnabled: false,
+                        onMapCreated: _onMapCreated,
                       ),
-                      Text(widget.landinfo.area,
-                          style: const TextStyle(fontSize: 20))
-                    ]),
-                    const TableRow(children: [
-                      SizedBox(
-                        height: 15,
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                    ]),
-                    TableRow(children: [
-                      const Text(
-                        "Owner Address : ",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
-                      Text(widget.landinfo.ownerAddress,
-                          style: const TextStyle(fontSize: 20))
-                    ]),
-                    const TableRow(children: [
-                      SizedBox(
-                        height: 15,
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                    ]),
-                    TableRow(children: [
-                      const Text(
-                        "Address : ",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
-                      Text(widget.landinfo.landAddress,
-                          style: const TextStyle(fontSize: 20))
-                    ]),
-                    const TableRow(children: [
-                      SizedBox(
-                        height: 15,
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                    ]),
-                    TableRow(children: [
-                      const Text(
-                        "Price : ",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
-                      Text(widget.landinfo.landPrice,
-                          style: const TextStyle(fontSize: 20))
-                    ]),
-                    const TableRow(children: [
-                      SizedBox(
-                        height: 15,
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                    ]),
-                    TableRow(children: [
-                      const Text(
-                        "Survey Number : ",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
-                      Text(widget.landinfo.physicalSurveyNumber,
-                          style: const TextStyle(fontSize: 20))
-                    ]),
-                    const TableRow(children: [
-                      SizedBox(
-                        height: 15,
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                    ]),
-                    TableRow(children: [
-                      const Text(
-                        "Property Id : ",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
-                      Text(widget.landinfo.propertyPID,
-                          style: const TextStyle(fontSize: 20))
-                    ]),
-                    const TableRow(children: [
-                      SizedBox(
-                        height: 15,
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                    ]),
-                    TableRow(children: [
-                      const Text(
-                        "Document : ",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
-                      MaterialButton(
-                        onPressed: () {
-                          launchUrl(widget.landinfo.document);
-                        },
-                        child: const Text('View',
-                            style: TextStyle(fontSize: 20, color: Colors.blue)),
-                      )
-                    ]),
-                    const TableRow(children: [
-                      SizedBox(
-                        height: 15,
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                    ])
-                  ],
+                    ),
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 20),
+
+                /// Title
+                const Center(
+                  child: Text('Details',
+                      style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueAccent)),
+                ),
+                const SizedBox(height: 20),
+
+                /// Details Card
+                Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        _buildDetail("Area", widget.landinfo.area),
+                        _buildDetail(
+                            "Owner Address", widget.landinfo.ownerAddress),
+                        _buildDetail(
+                            "Land Address", widget.landinfo.landAddress),
+                        _buildDetail("Price", widget.landinfo.landPrice),
+                        _buildDetail("Survey Number",
+                            widget.landinfo.physicalSurveyNumber),
+                        _buildDetail("Property ID", widget.landinfo.propertyPID),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                  width: 150,
+                                  child: Text("Document:",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18))),
+                              TextButton.icon(
+                                icon: const Icon(Icons.picture_as_pdf),
+                                label: const Text("View Document",
+                                    style: TextStyle(fontSize: 18)),
+                                onPressed: () {
+                                  launchUrl(widget.landinfo.document);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+
 
 //GoogleMap(
 //                   key: _key,

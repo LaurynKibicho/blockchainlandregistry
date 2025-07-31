@@ -27,8 +27,8 @@ class _MenuItemTileState extends State<MenuItemTile> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: widget.isSelected
-              ? Colors.transparent.withOpacity(0.3)
-              : Colors.transparent,
+              ? Colors.blueAccent.withOpacity(0.2)
+              : Colors.blue.withOpacity(0.1),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         width: 70, //_animation.value,

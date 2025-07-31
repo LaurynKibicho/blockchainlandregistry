@@ -47,6 +47,70 @@ class _LandInspectorState extends State<LandInspector> {
     isFirstTimeLoad = false;
     setState(() {});
   }
+   Widget getCurrentScreen() {
+    if (screen == -1) return const Center(child: CircularProgressIndicator());
+    if (screen == 0) {
+      return ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Wrap(
+            spacing: 16,
+            runSpacing: 16,
+            children: [
+              _container(0),
+              _container(1),
+              _container(2),
+            ],
+          ),
+        ],
+      );
+    }
+    if (screen == 1) {
+      return Container(padding: const EdgeInsets.all(16), child: userList());
+    }
+    if (screen == 2) {
+      return Container(padding: const EdgeInsets.all(16), child: landList());
+    }
+    if (screen == 3) {
+      return Container(padding: const EdgeInsets.all(16), child: transferOwnershipWidget());
+    }
+    return Container();
+  }
+
+  Widget _container(int index) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: colors[index],
+      child: Container(
+        width: 500,
+        height: 140,
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (index == 0)
+              Text(
+                userCount == -1 ? 'Loading...' : userCount.toString(),
+                style: const TextStyle(fontSize: 32, color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            if (index == 0)
+              const Text('Total Users Registered', style: TextStyle(fontSize: 16, color: Colors.white70)),
+            if (index == 1)
+              Text(
+                landCount == -1 ? 'Loading...' : landCount.toString(),
+                style: const TextStyle(fontSize: 32, color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            if (index == 1)
+              const Text('Total Property Registered', style: TextStyle(fontSize: 16, color: Colors.white70)),
+            if (index == 2)
+              const Text('Total Property Transfered', style: TextStyle(fontSize: 16, color: Colors.white70)),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,63 +124,32 @@ class _LandInspectorState extends State<LandInspector> {
       appBar: AppBar(
         title: const Text("LandInspector Dashboard"),
         centerTitle: true,
-        backgroundColor: const Color(0xFF272D34),
+        backgroundColor: Colors.blueAccent,
         leading: isDesktop
             ? Container()
             : GestureDetector(
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.menu,
-                    color: Colors.black,
-                  ), //AnimatedIcon(icon: AnimatedIcons.menu_arrow,progress: _animationController,),
+                  child: Icon(Icons.menu, color: Colors.white),
                 ),
-                onTap: () {
-                  _scaffoldKey.currentState!.openDrawer();
-                },
+                onTap: () => _scaffoldKey.currentState!.openDrawer(),
               ),
       ),
       drawer: drawer2(),
       drawerScrimColor: Colors.transparent,
-      body: Row(
-        children: [
-          isDesktop ? drawer2() : Container(),
-          if (screen == -1) const Center(child: CircularProgressIndicator()),
-          if (screen == 0)
+      body: Container(
+        color: const Color(0xFFF4F6F8),
+        child: Row(
+          children: [
+            isDesktop ? drawer2() : Container(),
             Expanded(
-                child: ListView(
-              children: [
-                Row(
-                  children: [
-                    _container(0),
-                    _container(1),
-                    _container(2),
-                  ],
-                ),
-              ],
-            ))
-          else if (screen == 1)
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(25),
-                child: userList(),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: getCurrentScreen(),
               ),
             )
-          else if (screen == 2)
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(25),
-                child: landList(),
-              ),
-            )
-          else if (screen == 3)
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(25),
-                child: transferOwnershipWidget(),
-              ),
-            )
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -150,150 +183,195 @@ class _LandInspectorState extends State<LandInspector> {
   }
 
   Widget landList() {
-    return ListView.builder(
-      itemCount: landData == null ? 1 : landData.length + 1,
-      itemBuilder: (BuildContext context, int index) {
-        if (index == 0) {
-          return Column(
-            children: [
-              const Divider(
-                height: 15,
+  return ListView.builder(
+    itemCount: landData == null ? 1 : landData.length + 1,
+    itemBuilder: (BuildContext context, int index) {
+      if (index == 0) {
+        return Column(
+          children: [
+            const Divider(height: 15),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(12),
               ),
-              Row(
+              child: Row(
                 children: const [
                   Expanded(
+                    flex: 1,
                     child: Text(
                       '#',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    flex: 1,
                   ),
                   Expanded(
-                      child: Center(
-                        child: Text('Owner Address',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                    flex: 5,
+                    child: Center(
+                      child: Text(
+                        'Owner Address',
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      flex: 5),
-                  Expanded(
-                    child: Center(
-                      child: Text('Area',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
+                  ),
+                  Expanded(
                     flex: 3,
+                    child: Center(
+                      child: Text(
+                        'Area',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
                   Expanded(
-                    child: Center(
-                      child: Text('Price',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
                     flex: 2,
+                    child: Center(
+                      child: Text(
+                        'Price',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
                   Expanded(
-                    child: Center(
-                      child: Text('PID',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
                     flex: 2,
+                    child: Center(
+                      child: Text(
+                        'PID',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
                   Expanded(
-                    child: Center(
-                      child: Text('SurveyNo.',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
                     flex: 2,
+                    child: Center(
+                      child: Text(
+                        'SurveyNo.',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
                   Expanded(
-                    child: Center(
-                      child: Text('Document',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
                     flex: 2,
+                    child: Center(
+                      child: Text(
+                        'Document',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
                   Expanded(
-                    child: Center(
-                      child: Text('Verify',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
                     flex: 2,
+                    child: Center(
+                      child: Text(
+                        'Verify',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   )
                 ],
               ),
-              const Divider(
-                height: 15,
-              )
-            ],
-          );
-        }
-        index -= 1;
-        List<dynamic> data = landData[index];
-        return Container(
-          height: 60,
-          decoration: const BoxDecoration(
-            border: Border(bottom: BorderSide(color: Colors.grey, width: 1)),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text((index + 1).toString()),
-                flex: 1,
-              ),
-              Expanded(
-                  child: Center(
-                    child: Text(data[9].toString()),
-                  ),
-                  flex: 5),
-              Expanded(
-                  child: Center(
-                    child: Text(
-                      data[2].toString(),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  flex: 3),
-              Expanded(child: Center(child: Text(data[3].toString())), flex: 2),
-              Expanded(child: Center(child: Text(data[5].toString())), flex: 2),
-              Expanded(child: Center(child: Text(data[6].toString())), flex: 2),
-              Expanded(
-                  child: Center(
-                      child: TextButton(
-                    onPressed: () {
-                      launchUrl(data[7].toString());
-                    },
-                    child: const Text(
-                      'View Document',
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                  )),
-                  flex: 2),
-              Expanded(
-                  child: Center(
-                    child: data[10]
-                        ? const Text('Verified')
-                        : ElevatedButton(
-                            onPressed: () async {
-                              SmartDialog.showLoading();
-                              try {
-                                if (connectedWithMetamask) {
-                                  await model2.verifyLand(data[0]);
-                                } else {
-                                  await model.verifyLand(data[0]);
-                                }
-                                await getLandList();
-                              } catch (e) {
-                                print(e);
-                              }
-                              SmartDialog.dismiss();
-                            },
-                            child: const Text('Verify')),
-                  ),
-                  flex: 2),
-            ],
-          ),
+            ),
+            const Divider(height: 15),
+          ],
         );
-      },
-    );
-  }
+      }
+
+      index -= 1;
+      List<dynamic> data = landData[index];
+
+      return Container(
+        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.05),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 1,
+              child: Text((index + 1).toString()),
+            ),
+            Expanded(
+              flex: 5,
+              child: Center(child: Text(data[9].toString())),
+            ),
+            Expanded(
+              flex: 3,
+              child: Center(
+                child: Text(
+                  data[2].toString(),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Center(child: Text(data[3].toString())),
+            ),
+            Expanded(
+              flex: 2,
+              child: Center(child: Text(data[5].toString())),
+            ),
+            Expanded(
+              flex: 2,
+              child: Center(child: Text(data[6].toString())),
+            ),
+            Expanded(
+              flex: 2,
+              child: Center(
+                child: TextButton(
+                  onPressed: () {
+                    launchUrl(data[7].toString());
+                  },
+                  child: const Text(
+                    'View Document',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Center(
+                child: data[10]
+                    ? const Text('Verified', style: TextStyle(color: Colors.green))
+                    : ElevatedButton(
+                        onPressed: () async {
+                          SmartDialog.showLoading();
+                          try {
+                            if (connectedWithMetamask) {
+                              await model2.verifyLand(data[0]);
+                            } else {
+                              await model.verifyLand(data[0]);
+                            }
+                            await getLandList();
+                          } catch (e) {
+                            print(e);
+                          }
+                          SmartDialog.dismiss();
+                        },
+                        child: const Text('Verify'),
+                      ),
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
 
   Future<void> getUserList() async {
     setState(() {
@@ -326,143 +404,183 @@ class _LandInspectorState extends State<LandInspector> {
   }
 
   Widget userList() {
-    return ListView.builder(
-        itemCount: userData == null ? 1 : userData.length + 1,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return Column(
-              children: [
-                const Divider(
-                  height: 15,
-                  thickness: 2,
-                  color: Colors.black,
-                ),
-                Row(
-                  children: const [
-                    Expanded(
-                      child: Text(
-                        '#',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      flex: 1,
-                    ),
-                    Expanded(
-                        child: Center(
-                          child: Text('Address',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                        flex: 5),
-                    Expanded(
-                      child: Center(
-                        child: Text('Name',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
-                      flex: 3,
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: Text('Adhar',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
-                      flex: 2,
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: Text('Pan',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
-                      flex: 2,
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: Text('Document',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
-                      flex: 2,
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: Text('Verify',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
-                      flex: 2,
-                    )
-                  ],
-                ),
-                const Divider(
-                  height: 15,
-                  thickness: 2,
-                  color: Colors.black,
-                )
-              ],
-            );
-          }
-          index -= 1;
-          List<dynamic> data = userData[index];
-          return Container(
-            height: 60,
-            decoration: BoxDecoration(
-                border:
-                    Border(bottom: BorderSide(width: 0.5, color: Colors.grey))),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text((index + 1).toString()),
-                  flex: 1,
-                ),
-                Expanded(
-                    child: Center(
-                      child: Text(data[0].toString()),
-                    ),
-                    flex: 5),
-                Expanded(
-                    child: Center(
-                      child: Text(data[1].toString()),
-                    ),
-                    flex: 3),
-                Expanded(
-                    child: Center(child: Text(data[4].toString())), flex: 2),
-                Expanded(
-                    child: Center(child: Text(data[5].toString())), flex: 2),
-                Expanded(
-                    child: Center(
-                        child: TextButton(
-                      onPressed: () {
-                        launchUrl(data[6].toString());
-                      },
-                      child: const Text(
-                        'View Document',
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                    )),
-                    flex: 2),
-                Expanded(
-                    child: Center(
-                      child: data[8]
-                          ? const Text('Verified')
-                          : ElevatedButton(
-                              onPressed: () async {
-                                SmartDialog.showLoading();
-                                try {
-                                  if (connectedWithMetamask) {
-                                    await model2.verifyUser(data[0].toString());
-                                  } else {
-                                    await model.verifyUser(data[0].toString());
-                                  }
-                                  await getUserList();
-                                } catch (e) {
-                                  print(e);
-                                }
-                                SmartDialog.dismiss();
-                              },
-                              child: const Text('Verify')),
-                    ),
-                    flex: 2),
-              ],
+  return ListView.builder(
+    itemCount: userData == null ? 1 : userData.length + 1,
+    itemBuilder: (context, index) {
+      if (index == 0) {
+        return Column(
+          children: [
+            const Divider(height: 20, thickness: 2, color: Colors.black),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              color: Colors.grey[100],
+              child: Row(
+                children: const [
+                  Expanded(
+                    flex: 1,
+                    child: Text('#',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: Colors.black87)),
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Text('Address',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: Colors.black87)),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Text('Name',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: Colors.black87)),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Text('Id Number',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: Colors.black87)),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Text('Phone Number',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: Colors.black87)),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Text('Document',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: Colors.black87)),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Text('Verify',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: Colors.black87)),
+                  ),
+                ],
+              ),
             ),
-          );
-        });
-  }
+            const Divider(height: 15, thickness: 2, color: Colors.black),
+          ],
+        );
+      }
+
+      index -= 1;
+      List<dynamic> data = userData[index];
+      return Container(
+        height: 65,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: const BoxDecoration(
+          border: Border(
+            bottom: BorderSide(width: 0.5, color: Colors.grey),
+          ),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 1,
+              child: Text((index + 1).toString(),
+                  style: const TextStyle(fontSize: 14)),
+            ),
+            Expanded(
+              flex: 5,
+              child: Text(data[0].toString(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 13),
+                  overflow: TextOverflow.ellipsis),
+            ),
+            Expanded(
+              flex: 3,
+              child: Text(data[1].toString(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 13),
+                  overflow: TextOverflow.ellipsis),
+            ),
+            Expanded(
+              flex: 2,
+              child: Text(data[4].toString(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 13)),
+            ),
+            Expanded(
+              flex: 2,
+              child: Text(data[5].toString(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 13)),
+            ),
+            Expanded(
+              flex: 2,
+              child: Center(
+                child: TextButton(
+                  onPressed: () {
+                    launchUrl(data[6].toString());
+                  },
+                  child: const Text('View',
+                      style: TextStyle(color: Colors.blue, fontSize: 13)),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Center(
+                child: data[8]
+                    ? const Text('Verified',
+                        style: TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13))
+                    : ElevatedButton(
+                        onPressed: () async {
+                          SmartDialog.showLoading();
+                          try {
+                            if (connectedWithMetamask) {
+                              await model2.verifyUser(data[0].toString());
+                            } else {
+                              await model.verifyUser(data[0].toString());
+                            }
+                            await getUserList();
+                          } catch (e) {
+                            print(e);
+                          }
+                          SmartDialog.dismiss();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green[700],
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                        ),
+                        child: const Text('Verify',
+                            style: TextStyle(fontSize: 13)),
+                      ),
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
 
   Future<void> paymentDoneList() async {
     //SmartDialog.showLoading();
@@ -501,288 +619,210 @@ class _LandInspectorState extends State<LandInspector> {
     //return allInfo;
   }
 
-  Widget transferOwnershipWidget() {
-    return ListView.builder(
-        itemCount: paymenList == null ? 1 : paymenList.length + 1,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return Column(
-              children: [
-                const Divider(
-                  height: 15,
-                ),
-                Row(
-                  children: const [
-                    Expanded(
-                      child: Text(
-                        '#',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      flex: 1,
-                    ),
-                    Expanded(
-                      child: Text(
-                        'Land Id',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      flex: 1,
-                    ),
-                    Expanded(
-                        child: Center(
-                          child: Text('Seller Address',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                        flex: 6),
-                    Expanded(
-                      child: Center(
-                        child: Text('Buyer Address',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
-                      flex: 6,
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: Text('Status',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
-                      flex: 2,
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: Text('Transfer Ownership',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
-                      flex: 3,
-                    )
-                  ],
-                ),
-                const Divider(
-                  height: 15,
-                )
-              ],
-            );
-          }
-          index -= 1;
-          List<dynamic> data = paymenList[index];
-          return Container(
-            height: 60,
-            decoration: BoxDecoration(
-                border:
-                    Border(bottom: BorderSide(width: 0.5, color: Colors.grey))),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text((index + 1).toString()),
-                  flex: 1,
-                ),
-                Expanded(
-                    child: Center(
-                      child: Text(data[3].toString()),
-                    ),
-                    flex: 1),
-                Expanded(
-                    child: Center(
-                      child: Text(data[1].toString()),
-                    ),
-                    flex: 6),
-                Expanded(
-                    child: Center(child: Text(data[2].toString())), flex: 6),
-                Expanded(
-                    child: Center(
-                        child: data[4].toString() == '3'
-                            ? const Text('Payment Done')
-                            : const Text('Completed')),
-                    flex: 2),
-                Expanded(
-                    child: Center(
-                      child: data[4].toString() == '4'
-                          ? const Text('Transfered')
-                          : ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                  primary: Colors.green),
-                              onPressed: () async {
-                                SmartDialog.showLoading();
-                                try {
-                                  List<CameraDescription> camerasList =
-                                      await availableCameras();
-                                  SmartDialog.dismiss();
-                                  await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              transferOwnership(
-                                                reqId: data[0].toString(),
-                                                sellerAdd: data[1].toString(),
-                                                landId: data[3].toString(),
-                                                buyerAdd: data[2].toString(),
-                                                cameraList: camerasList,
-                                              )));
-                                  await paymentDoneList();
-                                } catch (e) {
-                                  SmartDialog.dismiss();
-                                  showToast(
-                                      "Something Went Wrong\n Camera Exception",
-                                      context: context,
-                                      backgroundColor: Colors.red);
-                                }
-
-                                // SmartDialog.showLoading();
-                                // try {
-                                //   if (connectedWithMetamask)
-                                //     await model2.transferOwnership(data[0]);
-                                //   else
-                                //     await model.transferOwnership(data[0]);
-                                //
-                                //   await paymentDoneList();
-                                //   showToast("Ownership Transfered",
-                                //       context: context,
-                                //       backgroundColor: Colors.green);
-                                // } catch (e) {
-                                //   print(e);
-                                //   showToast("Something Went Wrong",
-                                //       context: context,
-                                //       backgroundColor: Colors.red);
-                                // }
-                                // SmartDialog.dismiss();
-                              },
-                              icon: const Icon(Icons.arrow_forward_ios),
-                              label: const Text('Transfer')),
-                    ),
-                    flex: 3),
-              ],
+ Widget transferOwnershipWidget() {
+  return ListView.builder(
+    itemCount: paymenList == null ? 1 : paymenList.length + 1,
+    itemBuilder: (context, index) {
+      if (index == 0) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              child: Text(
+                "Ownership Transfer Requests",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
             ),
-          );
-        });
-  }
-
-  Widget _container(int index) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        color: const Color(0xFFE7E7E7),
-        child: Card(
-          color: const Color(0xFFE7E7E7),
-          child: Container(
-            color: colors[index],
-            width: 250,
-            height: 140,
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (index == 0)
-                  Row(
-                    children: [
-                      userCount == -1
-                          ? const CircularProgressIndicator()
-                          : Text(
-                              userCount.toString(),
-                              style: const TextStyle(fontSize: 24),
-                            ),
-                    ],
+            const SizedBox(height: 10),
+            const Divider(height: 15, thickness: 1),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
+                children: const [
+                  Expanded(
+                    child: Text('#', style: TextStyle(fontWeight: FontWeight.bold)),
+                    flex: 1,
                   ),
-                if (index == 0)
-                  const Text(
-                    'Total Users Registered',
-                    style: TextStyle(fontSize: 20),
+                  Expanded(
+                    child: Text('Land Id', style: TextStyle(fontWeight: FontWeight.bold)),
+                    flex: 1,
                   ),
-                if (index == 1)
-                  Row(
-                    children: [
-                      landCount == -1
-                          ? const CircularProgressIndicator()
-                          : Text(
-                              landCount.toString(),
-                              style: const TextStyle(fontSize: 24),
-                            ),
-                    ],
+                  Expanded(
+                    child: Center(
+                      child: Text('Seller Address', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    flex: 6,
                   ),
-                if (index == 1)
-                  const Text('Total Property Registered',
-                      style: TextStyle(fontSize: 20)),
-                if (index == 2)
-                  const Text('Total Property Transfered ',
-                      style: TextStyle(fontSize: 20)),
-              ],
+                  Expanded(
+                    child: Center(
+                      child: Text('Buyer Address', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    flex: 6,
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Text('Status', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    flex: 2,
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Text('Action', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    flex: 3,
+                  )
+                ],
+              ),
             ),
-          ),
+            const Divider(height: 15, thickness: 1)
+          ],
+        );
+      }
+
+      index -= 1;
+      List<dynamic> data = paymenList[index];
+
+      return Container(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+        margin: const EdgeInsets.symmetric(vertical: 4),
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(width: 0.5, color: Colors.grey.shade300)),
+          color: Colors.white,
         ),
-      ),
-    );
-  }
+        child: Row(
+          children: [
+            Expanded(child: Text((index + 1).toString()), flex: 1),
+            Expanded(
+              child: Center(child: Text(data[3].toString())),
+              flex: 1,
+            ),
+            Expanded(
+              child: Center(
+                child: Text(
+                  data[1].toString(),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+              flex: 6,
+            ),
+            Expanded(
+              child: Center(
+                child: Text(
+                  data[2].toString(),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+              flex: 6,
+            ),
+            Expanded(
+              child: Center(
+                child: Text(
+                  data[4].toString() == '3' ? 'Payment Done' : 'Completed',
+                  style: TextStyle(
+                    color: Colors.blueGrey.shade700,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              flex: 2,
+            ),
+            Expanded(
+              child: Center(
+                child: data[4].toString() == '4'
+                    ? const Text('Transferred', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold))
+                    : ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () async {
+                          SmartDialog.showLoading();
+                          try {
+                            List<CameraDescription> camerasList = await availableCameras();
+                            SmartDialog.dismiss();
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => transferOwnership(
+                                  reqId: data[0].toString(),
+                                  sellerAdd: data[1].toString(),
+                                  landId: data[3].toString(),
+                                  buyerAdd: data[2].toString(),
+                                  cameraList: camerasList,
+                                ),
+                              ),
+                            );
+                            await paymentDoneList();
+                          } catch (e) {
+                            SmartDialog.dismiss();
+                            showToast("Something Went Wrong\nCamera Exception", context: context, backgroundColor: Colors.red);
+                          }
+                        },
+                        icon: const Icon(Icons.arrow_forward_ios, size: 16),
+                        label: const Text('Transfer'),
+                      ),
+              ),
+              flex: 3,
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
 
   Widget drawer2() {
-    return Container(
-      decoration: const BoxDecoration(
-        boxShadow: [
-          BoxShadow(blurRadius: 10, color: Colors.black26, spreadRadius: 2)
-        ],
-        color: Color(0xFF272D34),
-      ),
-      width: 250,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          const SizedBox(
-            width: 20,
-          ),
-          const Icon(
-            Icons.person,
-            size: 50,
-          ),
-          const SizedBox(
-            width: 30,
-          ),
-          const Text('Land Inspector',
-              style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold)),
-          const SizedBox(
-            height: 80,
-          ),
-          Expanded(
-            child: ListView.separated(
-              separatorBuilder: (context, counter) {
-                return const Divider(
-                  height: 2,
-                );
-              },
-              itemCount: menuItems.length,
-              itemBuilder: (BuildContext context, int index) {
-                return MenuItemTile(
-                  title: menuItems[index].title,
-                  icon: menuItems[index].icon,
-                  //animationController: _animationController,
-                  isSelected: screen == index,
+    return Drawer(
+      child: Container(
+        color: const Color(0xFF1F2937),
+        child: Column(
+          children: [
+            const SizedBox(height: 40),
+            const Icon(Icons.person, size: 80, color: Colors.white),
+            const SizedBox(height: 12),
+            const Text('Land Inspector',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold)),
+            const SizedBox(height: 30),
+            Expanded(
+              child: ListView.separated(
+                itemCount: menuItems.length,
+                separatorBuilder: (_, __) =>
+                    const Divider(color: Colors.white30),
+                itemBuilder: (context, index) => ListTile(
+                  leading: Icon(menuItems[index].icon,
+                      color: screen == index ? Colors.amber : Colors.white),
+                  title: Text(menuItems[index].title,
+                      style: TextStyle(
+                          color:
+                              screen == index ? Colors.amber : Colors.white)),
                   onTap: () {
                     if (index == 4) {
                       Navigator.pop(context);
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const home_page()));
-                      Navigator.of(context).pushNamed(
-                        '/',
-                      );
+                      Navigator.of(context).pushNamed('/');
                     }
                     if (index == 0) getUserCount();
                     if (index == 1) getUserList();
                     if (index == 2) getLandList();
                     if (index == 3) paymentDoneList();
-                    setState(() {
-                      screen = index;
-                    });
+                    setState(() => screen = index);
                   },
-                );
-              },
+                ),
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 20,
-          )
-        ],
+            const SizedBox(height: 20)
+          ],
+        ),
       ),
     );
   }
