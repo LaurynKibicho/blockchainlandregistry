@@ -1,6 +1,8 @@
 // Copyright 2014 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// found in the LICENSE file.//firebase/noplaybutton-41656/hosting/flutter.js
+
+// ignore_for_file: unused_element
 
 if (!_flutter) {
   var _flutter = {};
