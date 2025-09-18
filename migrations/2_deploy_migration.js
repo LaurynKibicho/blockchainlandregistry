@@ -1,3 +1,4 @@
+//  deployer.deploy(Migrations);
 const landContract = artifacts.require("Land");
 
 module.exports = function(deployer) {
