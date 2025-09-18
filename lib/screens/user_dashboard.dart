@@ -108,10 +108,10 @@ class _UserDashBoardState extends State<UserDashBoard> {
     List<MapBoxPlace>? res = await placesSearch.getPlaces(value);
     if (res != null) predictions = res;
     setState(() {});
-    // print(res);
-    // print(res![0].placeName);
-    // print(res![0].geometry!.coordinates);
-    // print(res![0]);
+    // // //print(res);
+    // // //print(res![0].placeName);
+    // // //print(res![0].geometry!.coordinates);
+    // // //print(res![0]);
   }
 
   @override
@@ -174,7 +174,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
       landList = await model.allLandList();
     }
 
-    // List<List<dynamic>> allInfo = [];
+    // // //List<List<dynamic>> allInfo = [];
     List<dynamic> temp;
     for (int i = 0; i < landList.length; i++) {
       if (connectedWithMetamask) {
@@ -187,7 +187,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
         isLoading = false;
       });
     }
-    // screen = 3;
+    // // //screen = 3;
     isLoading = false;
     setState(() {});
   }
@@ -220,14 +220,14 @@ class _UserDashBoardState extends State<UserDashBoard> {
       sentRequestInfo.add(temp);
       isLoading = false;
 
-      // SmartDialog.dismiss();
+      // // //SmartDialog.dismiss();
       setState(() {});
     }
 
-    // screen = 5;
+    // // //screen = 5;
     isLoading = false;
 
-    // SmartDialog.dismiss();
+    // // //SmartDialog.dismiss();
     setState(() {});
   }
 
@@ -255,14 +255,14 @@ class _UserDashBoardState extends State<UserDashBoard> {
       setState(() {});
     }
     isLoading = false;
-    //  screen = 4;
+    // // // screen = 4;
     setState(() {});
   }
 
   Future<void> getProfileInfo() async {
-    // setState(() {
-    //   isLoading = true;
-    // });
+    // // //setState(() {
+    // // //  isLoading = true;
+    // // //});
     if (connectedWithMetamask) {
       userInfo = await model2.myProfileInfo();
     } else {
@@ -360,7 +360,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
           children: [
             isDesktop
                 ? drawer2()
-                : Container(), // show permanent drawer on desktop
+                : Container(), // // //show permanent drawer on desktop
             Expanded(
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 300),
@@ -494,16 +494,16 @@ class _UserDashBoardState extends State<UserDashBoard> {
                                         ethToInr,
                                     ethToInr,
                                     data[0]);
-                                // SmartDialog.showLoading();
-                                // try {
-                                //   //await model.rejectRequest(data[0]);
-                                //   //await getMyReceivedRequest();
-                                // } catch (e) {
-                                //   print(e);
-                                // }
+                                // // //SmartDialog.showLoading();
+                                // // //try {
+                                // // //  //await model.rejectRequest(data[0]);
+                                // // //  //await getMyReceivedRequest();
+                                // // //} catch (e) {
+                                // // //  print(e);
+                                // // //}
                                 //
-                                // //await Future.delayed(Duration(seconds: 2));
-                                // SmartDialog.dismiss();
+                                // // ////await Future.delayed(Duration(seconds: 2));
+                                // // //SmartDialog.dismiss();
                               },
                         child: const Text('Make Payment')),
                   ),
@@ -804,68 +804,68 @@ class _UserDashBoardState extends State<UserDashBoard> {
     );
   }
 
- Widget _buildTextField({
-  required String label,
-  required String hint,
-  String? validatorMsg,
-  TextInputType? keyboardType,
-  void Function(String)? onChanged,
-  TextEditingController? controller,
-  FocusNode? focusNode,
-  TextInputFormatter? inputFormatter,
-  IconData? prefixIcon,
-}) {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 16),
-    child: TextFormField(
-      style: const TextStyle(fontSize: 16),
-      keyboardType: keyboardType,
-      controller: controller,
-      focusNode: focusNode,
-      onChanged: onChanged,
-      inputFormatters: inputFormatter != null ? [inputFormatter] : [],
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return validatorMsg ?? 'This field is required';
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        isDense: true,
-        prefixIcon: prefixIcon != null
-            ? Icon(prefixIcon, color: Colors.grey.shade600)
-            : null,
-        filled: true,
-        fillColor: Colors.grey.shade100,
-        hintStyle: TextStyle(color: Colors.grey.shade500),
-        labelStyle: TextStyle(
-          color: Colors.grey.shade800,
-          fontWeight: FontWeight.w500,
-        ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey.shade300),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey.shade300),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.blueAccent, width: 1.5),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.redAccent, width: 1.2),
+  Widget _buildTextField({
+    required String label,
+    required String hint,
+    String? validatorMsg,
+    TextInputType? keyboardType,
+    void Function(String)? onChanged,
+    TextEditingController? controller,
+    FocusNode? focusNode,
+    TextInputFormatter? inputFormatter,
+    IconData? prefixIcon,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: TextFormField(
+        style: const TextStyle(fontSize: 16),
+        keyboardType: keyboardType,
+        controller: controller,
+        focusNode: focusNode,
+        onChanged: onChanged,
+        inputFormatters: inputFormatter != null ? [inputFormatter] : [],
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return validatorMsg ?? 'This field is required';
+          }
+          return null;
+        },
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          isDense: true,
+          prefixIcon: prefixIcon != null
+              ? Icon(prefixIcon, color: Colors.grey.shade600)
+              : null,
+          filled: true,
+          fillColor: Colors.grey.shade100,
+          hintStyle: TextStyle(color: Colors.grey.shade500),
+          labelStyle: TextStyle(
+            color: Colors.grey.shade800,
+            fontWeight: FontWeight.w500,
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Colors.blueAccent, width: 1.5),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Colors.redAccent, width: 1.2),
+          ),
         ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   Widget addLand() {
     return Center(
@@ -1070,7 +1070,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header
+                // // //Header
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -1171,14 +1171,14 @@ class _UserDashBoardState extends State<UserDashBoard> {
   Widget drawer2() {
     return Drawer(
       child: Container(
-        color: const Color(0xFF1F2937), // dark background
+        color: const Color(0xFF1F2937), // // //dark background
         child: Column(
           children: [
             const SizedBox(height: 40),
             const Icon(Icons.person, size: 80, color: Colors.white),
             const SizedBox(height: 12),
             Text(
-              name, // dynamic user name
+              name, // // //dynamic user name
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,

@@ -138,8 +138,8 @@ class _transferOwnershipState extends State<transferOwnership> {
                 pw.Divider(height: 2),
                 pw.SizedBox(height: 14),
                 pw.Text("Paragraph selected for stamp duty: "),
-              ]); // Center
-        })); // Page
+              ]); // // //Center
+        })); // // //Page
 
     pdf.addPage(pw.Page(
         pageFormat: PdfPageFormat.a4,
@@ -237,17 +237,17 @@ class _transferOwnershipState extends State<transferOwnership> {
     Uint8List bytes = Uint8List.fromList(data);
     await uploadDocument(bytes);
 
-    /// final blob = html.Blob([bytes], 'application/pdf');
-    /// final url = html.Url.createObjectUrlFromBlob(blob);
-    // final anchor = html.document.createElement('a') as html.AnchorElement
-    //   ..href = url
-    //   ..style.display = 'none'
-    //   ..download = 'some_name.pdf';
-    /// html.window.open(url, "_blank");
-    // html.document.body!.children.add(anchor);
-    // anchor.click();
-    // html.document.body!.children.remove(anchor);
-    // html.Url.revokeObjectUrl(url);
+    /// // //final blob = html.Blob([bytes], 'application/pdf');
+    /// // //final url = html.Url.createObjectUrlFromBlob(blob);
+    // // //final anchor = html.document.createElement('a') as html.AnchorElement
+    // // //  ..href = url
+    // // //  ..style.display = 'none'
+    // // //  ..download = 'some_name.pdf';
+    /// // //html.window.open(url, "_blank");
+    // // //html.document.body!.children.add(anchor);
+    // // //anchor.click();
+    // // //html.document.body!.children.remove(anchor);
+    // // //html.Url.revokeObjectUrl(url);
   }
 
   getProfileInfo() async {
@@ -294,7 +294,7 @@ class _transferOwnershipState extends State<transferOwnership> {
         await model2.transferOwnership(widget.reqId, docUrl);
       else
         await model.transferOwnership(BigInt.parse(widget.reqId), docUrl);
-      // await paymentDoneList();
+      // // //await paymentDoneList();
       showToast("Ownership Transfered",
           context: context,
           backgroundColor: Colors.green,
@@ -507,7 +507,7 @@ class _transferOwnershipState extends State<transferOwnership> {
                   fontSize: 15,
                 ),
                 decoration: const InputDecoration(
-                    isDense: true, // Added this
+                    isDense: true, // // //Added this
                     contentPadding: EdgeInsets.all(12),
                     border: OutlineInputBorder(),
                     labelText: "Name",
@@ -527,7 +527,7 @@ class _transferOwnershipState extends State<transferOwnership> {
                   fontSize: 15,
                 ),
                 decoration: const InputDecoration(
-                    isDense: true, // Added this
+                    isDense: true, // // //Added this
                     contentPadding: EdgeInsets.all(12),
                     border: OutlineInputBorder(),
                     labelText: "Age",
@@ -547,7 +547,7 @@ class _transferOwnershipState extends State<transferOwnership> {
                   fontSize: 15,
                 ),
                 decoration: const InputDecoration(
-                    isDense: true, // Added this
+                    isDense: true, // // //Added this
                     contentPadding: EdgeInsets.all(12),
                     border: OutlineInputBorder(),
                     labelText: "Address",

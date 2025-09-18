@@ -250,7 +250,7 @@ Widget CustomTextFiled(text, label) => Padding(
           fontSize: 15,
         ),
         decoration: InputDecoration(
-            isDense: true, // Added this
+            isDense: true, // // //Added this
             contentPadding: const EdgeInsets.all(12),
             border: const OutlineInputBorder(),
             labelText: label,
@@ -279,14 +279,14 @@ void confirmDialog(
             title: const Text('Please Confirm'),
             content: Text(msg),
             actions: [
-              // The "Yes" button
+              // // //The "Yes" button
               CupertinoDialogAction(
                 onPressed: func,
                 child: const Text('Yes'),
                 isDefaultAction: true,
                 isDestructiveAction: true,
               ),
-              // The "No" button
+              // // //The "No" button
               CupertinoDialogAction(
                 onPressed: () {
                   Navigator.of(context).pop();

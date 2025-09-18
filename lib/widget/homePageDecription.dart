@@ -30,7 +30,7 @@ class LeftDescription extends StatelessWidget {
                 fontFamily: 'Poppins',
                 fontSize: 64,
                 fontWeight: FontWeight.w800,
-                color: Colors.white, // Masked by gradient
+                color: Colors.white, // // //Masked by gradient
                 height: 1.2,
                 letterSpacing: 1.5,
               ),

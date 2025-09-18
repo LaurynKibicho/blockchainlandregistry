@@ -65,9 +65,9 @@ class LandRegisterModel extends ChangeNotifier {
 
   Future<void> initiateSetup() async {
     _privateKey = utils.privateKey;
-    // _client = Web3Client(_rpcUrl, Client(), socketConnector: () {
-    //   return IOWebSocketChannel.connect(_wsUrl).cast<String>();
-    // });
+    // // //_client = Web3Client(_rpcUrl, Client(), socketConnector: () {
+    // // //  return IOWebSocketChannel.connect(_wsUrl).cast<String>();
+    // // //});
     _client = Web3Client(_rpcUrl, Client());
 
     await getAbi();

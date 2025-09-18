@@ -42,53 +42,45 @@ class _CheckPrivateKeyState extends State<CheckPrivateKey> {
         backgroundColor: Colors.blueAccent,
         title: const Text('Login'),
       ),
-       backgroundColor: Color.fromARGB(255, 137, 196, 233),
+      backgroundColor: Color.fromARGB(255, 137, 196, 233),
       body: Container(
-        
         //width: 500,backgroundColor: const Color(0xFF272D34),
         alignment: Alignment.topCenter,
         child: Column(
-          
-          
           children: [
             Padding(
-  padding: EdgeInsets.all(20.0),
-  child: Image.network(
-    'icons/security-4210502_1920.jpg',
-    height: 280.0,
-    width: 520.0,
-  ),
-),
-            // Image.asset(
-            //   'assets/authenticate.png',
-            //   height: 280,
-            //   width: 520,
-            // ),
+              padding: EdgeInsets.all(20.0),
+              child: Image.network(
+                'icons/security-4210502_1920.jpg',
+                height: 280.0,
+                width: 520.0,
+              ),
+            ),
+            // // //Image.asset(
+            // // //  'assets/authenticate.png',
+            // // //  height: 280,
+            // // //  width: 520,
+            // // //),
             const Text(
-                'Please enter your private key of your wallet OR you can connect with your Metamask wallet',
-                
-                style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontStyle: FontStyle.normal,
-          color: Color.fromARGB(255, 0, 0, 0),
-        ),
-        ),
-                
+              'Please enter your private key of your wallet OR you can connect with your Metamask wallet',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.normal,
+                color: Color.fromARGB(255, 0, 0, 0),
+              ),
+            ),
+
             SizedBox(
               width: width,
-              
               child: Padding(
                 padding: const EdgeInsets.all(15),
-                
                 child: Form(
                   key: _formKey,
                   child: TextFormField(
                     controller: keyController,
-                    
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your private key';
-                        
                       }
                       return null;
                     },
@@ -163,11 +155,11 @@ class _CheckPrivateKeyState extends State<CheckPrivateKey> {
                               } else {
                                 Navigator.pop(context);
                                 Navigator.pop(context);
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) =>
-                                //             const AddLandInspector()));
+                                // // //Navigator.push(
+                                // // //    context,
+                                // // //    MaterialPageRoute(
+                                // // //        builder: (context) =>
+                                // // //            const AddLandInspector()));
                                 Navigator.of(context).pushNamed(
                                   '/contractowner',
                                 );
@@ -195,11 +187,11 @@ class _CheckPrivateKeyState extends State<CheckPrivateKey> {
                               } else {
                                 Navigator.pop(context);
                                 Navigator.pop(context);
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) =>
-                                //             const LandInspector()));
+                                // // //Navigator.push(
+                                // // //    context,
+                                // // //    MaterialPageRoute(
+                                // // //        builder: (context) =>
+                                // // //            const LandInspector()));
                                 Navigator.of(context).pushNamed(
                                   '/landinspector',
                                 );
@@ -209,22 +201,22 @@ class _CheckPrivateKeyState extends State<CheckPrivateKey> {
                               if (temp == false) {
                                 Navigator.pop(context);
                                 Navigator.pop(context);
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) =>
-                                //             const RegisterUser()));
+                                // // //Navigator.push(
+                                // // //    context,
+                                // // //    MaterialPageRoute(
+                                // // //        builder: (context) =>
+                                // // //            const RegisterUser()));
                                 Navigator.of(context).pushNamed(
                                   '/registeruser',
                                 );
                               } else {
                                 Navigator.pop(context);
                                 Navigator.pop(context);
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) =>
-                                //             const UserDashBoard()));
+                                // // //Navigator.push(
+                                // // //    context,
+                                // // //    MaterialPageRoute(
+                                // // //        builder: (context) =>
+                                // // //            const UserDashBoard()));
                                 Navigator.of(context).pushNamed(
                                   '/user',
                                 );
@@ -257,10 +249,10 @@ class _CheckPrivateKeyState extends State<CheckPrivateKey> {
                     } else {
                       Navigator.pop(context);
                       Navigator.pop(context);
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const AddLandInspector()));
+                      // // //Navigator.push(
+                      // // //    context,
+                      // // //    MaterialPageRoute(
+                      // // //        builder: (context) => const AddLandInspector()));
                       Navigator.of(context).pushNamed(
                         '/contractowner',
                       );
@@ -270,20 +262,20 @@ class _CheckPrivateKeyState extends State<CheckPrivateKey> {
                     if (temp == false) {
                       Navigator.pop(context);
                       Navigator.pop(context);
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const RegisterUser()));
+                      // // //Navigator.push(
+                      // // //    context,
+                      // // //    MaterialPageRoute(
+                      // // //        builder: (context) => const RegisterUser()));
                       Navigator.of(context).pushNamed(
                         '/registeruser',
                       );
                     } else {
                       Navigator.pop(context);
                       Navigator.pop(context);
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const UserDashBoard()));
+                      // // //Navigator.push(
+                      // // //    context,
+                      // // //    MaterialPageRoute(
+                      // // //        builder: (context) => const UserDashBoard()));
                       Navigator.of(context).pushNamed(
                         '/user',
                       );

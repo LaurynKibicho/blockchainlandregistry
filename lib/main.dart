@@ -21,15 +21,15 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    // return ChangeNotifierProvider(
-    //   create: (context) => LandRegisterModel(),
-    //   child: MaterialApp(
-    //     debugShowCheckedModeBanner: false,
-    //     navigatorObservers: [FlutterSmartDialog.observer],
-    //     builder: FlutterSmartDialog.init(),
-    //     home: home_page(),
-    //   ),
-    // );
+    // // //return ChangeNotifierProvider(
+    // // //  create: (context) => LandRegisterModel(),
+    // // //  child: MaterialApp(
+    // // //    debugShowCheckedModeBanner: false,
+    // // //    navigatorObservers: [FlutterSmartDialog.observer],
+    // // //    builder: FlutterSmartDialog.init(),
+    // // //    home: home_page(),
+    // // //  ),
+    // // //);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<LandRegisterModel>(
@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
         builder: FlutterSmartDialog.init(),
         initialRoute: '/',
         onGenerateRoute: RouteGenerator.generateRoute,
-        // home: home_page(),
+        // // //home: home_page(),
       ),
     );
   }

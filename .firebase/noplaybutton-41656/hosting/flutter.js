@@ -1,8 +1,8 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.//firebase/noplaybutton-41656/hosting/flutter.js
+// // //Copyright 2014 The Flutter Authors. All rights reserved.
+// // //Use of this source code is governed by a BSD-style license that can be
+// // //found in the LICENSE file.//firebase/noplaybutton-41656/hosting/flutter.js
 
-// ignore_for_file: unused_element
+// // //ignore_for_file: unused_element
 
 if (!_flutter) {
   var _flutter = {};
@@ -118,7 +118,7 @@ _flutter.loader = null;
      */
     loadServiceWorker(settings) {
       if (settings == null) {
-        // In the future, settings = null -> uninstall service worker?
+        // // //In the future, settings = null -> uninstall service worker?
         console.debug("Null serviceWorker configuration. Skipping.");
         return Promise.resolve();
       }
@@ -138,7 +138,7 @@ _flutter.loader = null;
         timeoutMillis = 4000,
       } = settings;
 
-      // Apply the TrustedTypes policy, if present.
+      // // //Apply the TrustedTypes policy, if present.
       let url = serviceWorkerUrl;
       if (this._ttPolicy != null) {
         url = this._ttPolicy.createScriptURL(url);
@@ -149,7 +149,7 @@ _flutter.loader = null;
         .then((serviceWorkerRegistration) => this._getNewServiceWorker(serviceWorkerRegistration, serviceWorkerVersion))
         .then(this._waitForServiceWorkerActivation);
 
-      // Timeout race promise
+      // // //Timeout race promise
       return timeout(
         serviceWorkerActivation,
         timeoutMillis,
@@ -169,13 +169,13 @@ _flutter.loader = null;
      */
     async _getNewServiceWorker(serviceWorkerRegistration, serviceWorkerVersion) {
       if (!serviceWorkerRegistration.active && (serviceWorkerRegistration.installing || serviceWorkerRegistration.waiting)) {
-        // No active web worker and we have installed or are installing
-        // one for the first time. Simply wait for it to activate.
+        // // //No active web worker and we have installed or are installing
+        // // //one for the first time. Simply wait for it to activate.
         console.debug("Installing/Activating first service worker.");
         return serviceWorkerRegistration.installing || serviceWorkerRegistration.waiting;
       } else if (!serviceWorkerRegistration.active.scriptURL.endsWith(serviceWorkerVersion)) {
-        // When the app updates the serviceWorkerVersion changes, so we
-        // need to ask the service worker to update.
+        // // //When the app updates the serviceWorkerVersion changes, so we
+        // // //need to ask the service worker to update.
         const newRegistration = await serviceWorkerRegistration.update();
         console.debug("Updating service worker.");
         return newRegistration.installing || newRegistration.waiting || newRegistration.active;
@@ -223,7 +223,7 @@ _flutter.loader = null;
      * Creates a FlutterEntrypointLoader.
      */
     constructor() {
-      // Watchdog to prevent injecting the main entrypoint multiple times.
+      // // //Watchdog to prevent injecting the main entrypoint multiple times.
       this._scriptLoaded = false;
     }
 
@@ -265,9 +265,9 @@ _flutter.loader = null;
     didCreateEngineInitializer(engineInitializer) {
       if (typeof this._didCreateEngineInitializerResolve === "function") {
         this._didCreateEngineInitializerResolve(engineInitializer);
-        // Remove the resolver after the first time, so Flutter Web can hot restart.
+        // // //Remove the resolver after the first time, so Flutter Web can hot restart.
         this._didCreateEngineInitializerResolve = null;
-        // Make the engine revert to "auto" initialization on hot restart.
+        // // //Make the engine revert to "auto" initialization on hot restart.
         delete _flutter.loader.didCreateEngineInitializer;
       }
       if (typeof this._onEntrypointLoaded === "function") {
@@ -295,15 +295,15 @@ _flutter.loader = null;
         this._scriptLoaded = true;
         const scriptTag = this._createScriptTag(entrypointUrl);
         if (useCallback) {
-          // Just inject the script tag, and return nothing; Flutter will call
-          // `didCreateEngineInitializer` when it's done.
+          // // //Just inject the script tag, and return nothing; Flutter will call
+          // // //`didCreateEngineInitializer` when it's done.
           console.debug("Injecting <script> tag. Using callback.");
           this._onEntrypointLoaded = onEntrypointLoaded;
           document.body.append(scriptTag);
         } else {
-          // Inject the script tag and return a promise that will get resolved
-          // with the EngineInitializer object from Flutter when it calls
-          // `didCreateEngineInitializer` later.
+          // // //Inject the script tag and return a promise that will get resolved
+          // // //with the EngineInitializer object from Flutter when it calls
+          // // //`didCreateEngineInitializer` later.
           return new Promise((resolve, reject) => {
             console.debug(
               "Injecting <script> tag. Using Promises. Use the callback approach instead!"
@@ -324,7 +324,7 @@ _flutter.loader = null;
     _createScriptTag(url) {
       const scriptTag = document.createElement("script");
       scriptTag.type = "application/javascript";
-      // Apply TrustedTypes validation, if available.
+      // // //Apply TrustedTypes validation, if available.
       let trustedUrl = url;
       if (this._ttPolicy != null) {
         trustedUrl = this._ttPolicy.createScriptURL(url);
@@ -352,23 +352,23 @@ _flutter.loader = null;
     async loadEntrypoint(options) {
       const { serviceWorker, ...entrypoint } = options || {};
 
-      // A Trusted Types policy that is going to be used by the loader.
+      // // //A Trusted Types policy that is going to be used by the loader.
       const flutterTT = new FlutterTrustedTypesPolicy();
 
-      // The FlutterServiceWorkerLoader instance could be injected as a dependency
-      // (and dynamically imported from a module if not present).
+      // // //The FlutterServiceWorkerLoader instance could be injected as a dependency
+      // // //(and dynamically imported from a module if not present).
       const serviceWorkerLoader = new FlutterServiceWorkerLoader();
       serviceWorkerLoader.setTrustedTypesPolicy(flutterTT.policy);
       await serviceWorkerLoader.loadServiceWorker(serviceWorker).catch(e => {
-        // Regardless of what happens with the injection of the SW, the show must go on
+        // // //Regardless of what happens with the injection of the SW, the show must go on
         console.warn("Exception while loading service worker:", e);
       });
 
-      // The FlutterEntrypointLoader instance could be injected as a dependency
-      // (and dynamically imported from a module if not present).
+      // // //The FlutterEntrypointLoader instance could be injected as a dependency
+      // // //(and dynamically imported from a module if not present).
       const entrypointLoader = new FlutterEntrypointLoader();
       entrypointLoader.setTrustedTypesPolicy(flutterTT.policy);
-      // Install the `didCreateEngineInitializer` listener where Flutter web expects it to be.
+      // // //Install the `didCreateEngineInitializer` listener where Flutter web expects it to be.
       this.didCreateEngineInitializer =
         entrypointLoader.didCreateEngineInitializer.bind(entrypointLoader);
       return entrypointLoader.loadEntrypoint(entrypoint);

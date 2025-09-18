@@ -67,8 +67,8 @@ class _ViewLandDetailsState extends State<ViewLandDetails> {
               width: 250,
               child: Text(
                 "$title:",
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: 18),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               )),
           Expanded(
             child: Text(value, style: const TextStyle(fontSize: 18)),
@@ -93,7 +93,7 @@ class _ViewLandDetailsState extends State<ViewLandDetails> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                /// Map Card
+                /// // //Map Card
                 Card(
                   elevation: 4,
                   shape: RoundedRectangleBorder(
@@ -118,7 +118,7 @@ class _ViewLandDetailsState extends State<ViewLandDetails> {
                 ),
                 const SizedBox(height: 20),
 
-                /// Title
+                /// // //Title
                 const Center(
                   child: Text('Details',
                       style: TextStyle(
@@ -128,7 +128,7 @@ class _ViewLandDetailsState extends State<ViewLandDetails> {
                 ),
                 const SizedBox(height: 20),
 
-                /// Details Card
+                /// // //Details Card
                 Card(
                   elevation: 3,
                   shape: RoundedRectangleBorder(
@@ -145,7 +145,8 @@ class _ViewLandDetailsState extends State<ViewLandDetails> {
                         _buildDetail("Price", widget.landinfo.landPrice),
                         _buildDetail("Survey Number",
                             widget.landinfo.physicalSurveyNumber),
-                        _buildDetail("Property ID", widget.landinfo.propertyPID),
+                        _buildDetail(
+                            "Property ID", widget.landinfo.propertyPID),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Row(
@@ -183,33 +184,33 @@ class _ViewLandDetailsState extends State<ViewLandDetails> {
 
 
 //GoogleMap(
-//                   key: _key,
-//                   markers: {
-//                     Marker(GeoCoord(17.48801845587808, 75.28015598816665)),
-//                     Marker(GeoCoord(17.488100319437635, 75.28213009400162)),
-//                     Marker(GeoCoord(17.487384012042043, 75.28214082283768)),
-//                     Marker(GeoCoord(17.487256099710205, 75.28020963234695))
-//                   },
-//                   initialZoom: 18,
-//                   initialPosition: GeoCoord(
-//                       (17.48801845587808 +
-//                               17.488100319437635 +
-//                               17.487384012042043 +
-//                               17.487256099710205) /
-//                           4,
-//                       (75.28015598816665 +
-//                               75.28213009400162 +
-//                               75.28214082283768 +
-//                               75.28020963234695) /
-//                           4),
-//                   mapType: _mapStyle,
-//                   interactive: true,
-//                   mobilePreferences: const MobileMapPreferences(
-//                     trafficEnabled: true,
-//                     zoomControlsEnabled: false,
-//                   ),
-//                   webPreferences: WebMapPreferences(
-//                     fullscreenControl: true,
-//                     zoomControl: true,
-//                   ),
-//                 )
+// // //                  key: _key,
+// // //                  markers: {
+// // //                    Marker(GeoCoord(17.48801845587808, 75.28015598816665)),
+// // //                    Marker(GeoCoord(17.488100319437635, 75.28213009400162)),
+// // //                    Marker(GeoCoord(17.487384012042043, 75.28214082283768)),
+// // //                    Marker(GeoCoord(17.487256099710205, 75.28020963234695))
+// // //                  },
+// // //                  initialZoom: 18,
+// // //                  initialPosition: GeoCoord(
+// // //                      (17.48801845587808 +
+// // //                              17.488100319437635 +
+// // //                              17.487384012042043 +
+// // //                              17.487256099710205) /
+// // //                          4,
+// // //                      (75.28015598816665 +
+// // //                              75.28213009400162 +
+// // //                              75.28214082283768 +
+// // //                              75.28020963234695) /
+// // //                          4),
+// // //                  mapType: _mapStyle,
+// // //                  interactive: true,
+// // //                  mobilePreferences: const MobileMapPreferences(
+// // //                    trafficEnabled: true,
+// // //                    zoomControlsEnabled: false,
+// // //                  ),
+// // //                  webPreferences: WebMapPreferences(
+// // //                    fullscreenControl: true,
+// // //                    zoomControl: true,
+// // //                  ),
+// // //                )

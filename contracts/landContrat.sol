@@ -179,7 +179,7 @@ contract Land {
         lands[landsCount] = Landreg(landsCount, _area, _address, landPrice,_allLatiLongi,_propertyPID, _surveyNum , _document,false,msg.sender,false);
         MyLands[msg.sender].push(landsCount);
         allLandList[1].push(landsCount);
-        // emit AddingLand(landsCount);
+        // // //emit AddingLand(landsCount);
     }
 
     function ReturnAllLandList() public view returns(uint[] memory)

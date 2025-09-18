@@ -27,7 +27,7 @@ class MetaMaskProvider extends ChangeNotifier {
   var contract;
 
   final abi = [
-    // Some details about the token
+    // // //Some details about the token
 
     "function ReturnAllUserList() public view returns(address[] memory)",
     "function isUserRegistered(address _addr) public view returns(bool)",
@@ -71,9 +71,9 @@ class MetaMaskProvider extends ChangeNotifier {
       currentChain = await ethereum!.getChainId();
       print(currentChain);
 
-      // Get signer from provider
-      // final signer = provider!.getSigner();
-      // var t = await signer.getBalance();
+      // // //Get signer from provider
+      // // //final signer = provider!.getSigner();
+      // // //var t = await signer.getBalance();
 
       contract = Contract(
         contractAddress,

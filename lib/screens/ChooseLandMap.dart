@@ -78,10 +78,10 @@ class _landOnMapState extends State<landOnMap> {
     List<MapBoxPlace>? res = await placesSearch.getPlaces(value);
     if (res != null) predictions = res;
     setState(() {});
-    // print(res);
-    // print(res![0].placeName);
-    // print(res![0].geometry!.coordinates);
-    // print(res![0]);
+    // // //print(res);
+    // // //print(res![0].placeName);
+    // // //print(res![0].geometry!.coordinates);
+    // // //print(res![0]);
   }
 
   @override
@@ -139,7 +139,7 @@ class _landOnMapState extends State<landOnMap> {
                         Icons.search,
                         color: Colors.white,
                       ),
-                      isDense: true, // Added this
+                      isDense: true, // // //Added this
                       contentPadding: const EdgeInsets.all(12),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5)),

@@ -31,15 +31,15 @@ Widget landWid(isverified, area, address, price, isForSell, makeforSellFun) =>
               fit: BoxFit.fill,
             ),
           ),
-          // Image(
+          // // //Image(
           //
-          //   image: NetworkImage(
-          //       'http://www.kerloguenursinghome.com/wp-content/uploads/2019/12/19038526ce9f8be4a8dba148da99ff77.jpg'),
-          // ),
-           SizedBox(
-           width: 40,
-                      height: 40,
-                       child: Image.network('icons/location-pin.png'),
+          // // //  image: NetworkImage(
+          // // //      'http://www.kerloguenursinghome.com/wp-content/uploads/2019/12/19038526ce9f8be4a8dba148da99ff77.jpg'),
+          // // //),
+          SizedBox(
+            width: 40,
+            height: 40,
+            child: Image.network('icons/location-pin.png'),
           ),
           Text(
             isverified ? 'Verified' : 'Not Yet Verified',
@@ -124,11 +124,11 @@ Widget landWid2(isverified, area, address, price, isMyLand, isForSell,
               fit: BoxFit.fill,
             ),
           ),
-          // Image(
+          // // //Image(
           //
-          //   image: NetworkImage(
-          //       'http://www.kerloguenursinghome.com/wp-content/uploads/2019/12/19038526ce9f8be4a8dba148da99ff77.jpg'),
-          // ),
+          // // //  image: NetworkImage(
+          // // //      'http://www.kerloguenursinghome.com/wp-content/uploads/2019/12/19038526ce9f8be4a8dba148da99ff77.jpg'),
+          // // //),
           const SizedBox(
             height: 10,
           ),
