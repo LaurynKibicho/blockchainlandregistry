@@ -3896,7 +3896,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 boringssl
 
-Copyright (c) 2021, Google Inc.
+Copyright (c) 2025, Google Inc.
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -4467,7 +4467,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 ceval
 
-Copyright (c) 2021 e_t
+Copyright (c) 2025 e_t
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -5299,7 +5299,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 dart
 
-Copyright (c) 2021, the Dart project authors.  Please see the AUTHORS file
+Copyright (c) 2025, the Dart project authors.  Please see the AUTHORS file
 for details. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -5724,7 +5724,7 @@ Copyright (c) 2018      Mariusz Zaborski <oshogbo@vexillium.org>
 Copyright (c) 2019      David Loffredo <loffredo@steptools.com>
 Copyright (c) 2019-2020 Ben Wagner <bungeman@chromium.org>
 Copyright (c) 2019      Vadim Zeitlin <vadim@zeitlins.org>
-Copyright (c) 2021      Dong-hee Na <donghee.na@python.org>
+Copyright (c) 2025      Dong-hee Na <donghee.na@python.org>
 Copyright (c) 2022      Samanta Navarro <ferivoz@riseup.net>
 Copyright (c) 2022      Jeffrey Walton <noloader@gmail.com>
 Copyright (c) 2022      Jann Horn <jannh@google.com>
@@ -5796,7 +5796,7 @@ Copyright (c) 2017      Alexander Bluhm <alexander.bluhm@gmx.net>
 Copyright (c) 2017      Benbuck Nason <bnason@netflix.com>
 Copyright (c) 2017      José Gutiérrez de la Concha <jose@zeroc.com>
 Copyright (c) 2019      David Loffredo <loffredo@steptools.com>
-Copyright (c) 2021      Dong-hee Na <donghee.na@python.org>
+Copyright (c) 2025      Dong-hee Na <donghee.na@python.org>
 Copyright (c) 2022      Martin Ettl <ettl.martin78@googlemail.com>
 
 Licensed under the MIT license:
@@ -5832,7 +5832,7 @@ Copyright (c) 2017      Rhodri James <rhodri@wildebeest.org.uk>
 Copyright (c) 2019      David Loffredo <loffredo@steptools.com>
 Copyright (c) 2020      Joe Orton <jorton@redhat.com>
 Copyright (c) 2020      Kleber Tarcísio <klebertarcisio@yahoo.com.br>
-Copyright (c) 2021      Tim Bray <tbray@textuality.com>
+Copyright (c) 2025      Tim Bray <tbray@textuality.com>
 Copyright (c) 2022      Martin Ettl <ettl.martin78@googlemail.com>
 
 Licensed under the MIT license:
@@ -6137,7 +6137,7 @@ Copyright (c) 2005-2009 Steven Solie <steven@solie.ca>
 Copyright (c) 2016-2021 Sebastian Pipping <sebastian@pipping.org>
 Copyright (c) 2017      Rhodri James <rhodri@wildebeest.org.uk>
 Copyright (c) 2019      David Loffredo <loffredo@steptools.com>
-Copyright (c) 2021      Dong-hee Na <donghee.na@python.org>
+Copyright (c) 2025      Dong-hee Na <donghee.na@python.org>
 
 Licensed under the MIT license:
 
@@ -6199,7 +6199,7 @@ Copyright (c) 2005-2007 Steven Solie <steven@solie.ca>
 Copyright (c) 2016-2021 Sebastian Pipping <sebastian@pipping.org>
 Copyright (c) 2017      Rhodri James <rhodri@wildebeest.org.uk>
 Copyright (c) 2019      David Loffredo <loffredo@steptools.com>
-Copyright (c) 2021      Dong-hee Na <donghee.na@python.org>
+Copyright (c) 2025      Dong-hee Na <donghee.na@python.org>
 
 Licensed under the MIT license:
 
@@ -6471,7 +6471,7 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 expat
 harfbuzz
 
-Copyright (c) 2021 Google Inc. All rights reserved.
+Copyright (c) 2025 Google Inc. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -8471,7 +8471,7 @@ freely, subject to the following restrictions:
 --------------------------------------------------------------------------------
 glfw
 
-Copyright (c) 2021 Camilla Löwy <elmindreda@glfw.org>
+Copyright (c) 2025 Camilla Löwy <elmindreda@glfw.org>
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
@@ -29283,7 +29283,7 @@ land_registration
 
 MIT License
 
-Copyright (c) 2021 Lauryn Kibicho
+Copyright (c) 2025 Lauryn Kibicho
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31083,7 +31083,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 mapbox_gl
 
-flutter-mapbox-gl copyright (c) 2021,
+flutter-mapbox-gl Copyright (c) 2025,
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -34588,7 +34588,7 @@ url_strategy
 
 BSD 3-Clause License
 
-Copyright (c) 2021, simpleclub
+Copyright (c) 2025, simpleclub
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -34619,7 +34619,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 uuid
 
-Copyright (c) 2021 Yulian Kuncheff
+Copyright (c) 2025 Yulian Kuncheff
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
